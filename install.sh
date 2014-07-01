@@ -4,9 +4,9 @@ echo "Installing DotFiles"
 
 DOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-rm -rf $DOTDIR/.gitconfig
-rm -rf $DOTDIR/.githelpers
-rm -rf $DOTDIR/.globalignore
+rm -rf ~/.gitconfig
+rm -rf ~/.githelpers
+rm -rf ~/.globalignore
 
 ln -nfs $DOTDIR/.gitconfig ~/
 ln -nfs $DOTDIR/.githelpers ~/
