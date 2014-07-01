@@ -92,7 +92,7 @@
     submodule = 1
 
 [push]
-    default = simple
+    default = current
 
 [pack]
     threads = 0
