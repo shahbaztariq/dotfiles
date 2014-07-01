@@ -46,11 +46,7 @@
     cl = clone
     co = checkout
     br = branch
-
-    # Git helpers
-    l = "!source ~/.githelpers && pretty_git_log"
-    la = !git l --all
-
+    
     # Ignore/unignore changes to files (like a local .gitignore)
     # http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
     assume = update-index --assume-unchanged
