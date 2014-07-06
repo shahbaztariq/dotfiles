@@ -17,6 +17,9 @@
 *.iso
 *.rar
 *.zip
+
+# n98-magerun #
+###############
 mcmd
 
 # Security Files
@@ -47,5 +50,9 @@ tmtagsHistory
 *.swp
 .idea
 ._*
-.idea/
+.idea
 .sass-cache
+.project
+/nbproject/
+/eclipse/
+.vagrant
