@@ -46,9 +46,12 @@ tmtagsHistory
 *.swp
 .idea
 ._*
-.idea/
+.idea
 .sass-cache
-sftp-config*.json
-Vagrantfile.ssst
+.project
+/nbproject/
+/eclipse/
 .vagrant
 ssst.php
+sftp-config*.json
+Vagrantfile.ssst
