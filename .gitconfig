@@ -9,6 +9,7 @@
 
 [core]
     excludesfile = ~/.globalignore
+    autocrlf = false
 
 [alias]
     diff = diff --ignore-space-at-eol -b -w --ignore-blank-lines
@@ -54,6 +55,11 @@
     assumed = "!git ls-files -v | grep ^h | cut -c 3-"
     unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
     assumeall = "!git status -s | awk {'print $2'} | xargs git assume"
+    
+    skip = update-index --skip-worktree
+    unskip = update-index --no-skip-worktree
+    skipped = "!git ls-files -v | grep ^S | cut -c 3-"
+    unskipall = "!git skipped | xargs git update-index --no-skip-worktree"
 
 [color]
     diff = auto

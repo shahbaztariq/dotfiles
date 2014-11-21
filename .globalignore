@@ -48,3 +48,7 @@ tmtagsHistory
 ._*
 .idea/
 .sass-cache
+sftp-config*.json
+Vagrantfile.ssst
+.vagrant
+ssst.php
