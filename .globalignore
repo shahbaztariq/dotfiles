@@ -54,4 +54,6 @@ tmtagsHistory
 .vagrant
 ssst.php
 sftp-config*.json
+sftp-config*.json.local
+sftp-config*.json.remote
 Vagrantfile.ssst
