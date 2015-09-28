@@ -101,3 +101,6 @@
 
 [credential]
     helper = cache
+
+[diff]
+    tool = meld
