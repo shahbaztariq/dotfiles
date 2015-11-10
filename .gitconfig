@@ -20,15 +20,9 @@
     # slight variation of pretty log graph
     l = log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
     
-    # show diff of cached files
-    dc = diff --cached
-    
     # show changed files for a commit
     cf = show --pretty="format:" --name-only
     
-    # show what I did today
-    day = "!sh -c 'git log --reverse --no-merges --branches=* --date=local --after=\"yesterday 11:59PM\" --author=\"`git config --get user.name`\"'"
-
     # stash shortcuts
     sp = stash pop
     sw = stash save

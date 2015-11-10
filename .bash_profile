@@ -9,9 +9,6 @@ for file in ~/.{path,bash_prompt,exports,aliases,functions,extra}; do
 done;
 unset file;
 
-# case-insensitive globbing (used in pathname expansion)
-shopt -s nocaseglob;
-
 # append to the bash history file, rather than overwriting it
 shopt -s histappend;
 
