@@ -8,6 +8,7 @@ rm -rf ~/.gitconfig
 rm -rf ~/.globalignore
 rm -rf ~/.bash_profile
 rm -rf ~/.bash_prompt
+rm -rf ~/.bashrc
 rm -rf ~/.aliases
 rm -rf ~/.inputrc
 
@@ -17,3 +18,4 @@ ln -nfs $DOTDIR/.bash_profile ~/
 ln -nfs $DOTDIR/.bash_prompt ~/
 ln -nfs $DOTDIR/.aliases ~/
 ln -nfs $DOTDIR/.inputrc ~/
+ln -nfs $DOTDIR/.bashrc ~/
