@@ -1,4 +1,4 @@
-# easier navigation: .., ..., ...., .....
+# easier navigation
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -7,7 +7,7 @@ alias .....="cd ../../../.."
 # shortcuts
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
-alias p="cd ~/Projects"
+alias pr="cd ~/Projects"
 
 # detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
