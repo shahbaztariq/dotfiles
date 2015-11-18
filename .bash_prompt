@@ -16,30 +16,29 @@ prompt_git() {
     # check if the current directory is in a git repository.
     if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
 
-        # check if the current directory is in .git before running git checks
-        if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
-
-            # check for uncommitted changes in the index.
-            if ! $(git diff --quiet --ignore-submodules --cached); then
-                s+='+';
-            fi;
-
-            # check for unstaged changes.
-            if ! $(git diff-files --quiet --ignore-submodules --); then
-                s+='!';
-            fi;
-
-            # check for untracked files.
-            if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-                s+='?';
-            fi;
-
-            # check for stashed files.
-            if $(git rev-parse --verify refs/stash &>/dev/null); then
-                s+='$';
-            fi;
-
-        fi;
+        ## check if the current directory is in .git before running git checks
+        #if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
+        #
+        #    # check for uncommitted changes in the index.
+        #    if ! $(git diff --quiet --ignore-submodules --cached); then
+        #        s+='+';
+        #    fi;
+        #
+        #    # check for unstaged changes.
+        #    if ! $(git diff-files --quiet --ignore-submodules --); then
+        #        s+='!';
+        #    fi;
+        #
+        #    # check for untracked files.
+        #    if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+        #        s+='?';
+        #    fi;
+        #
+        #    # check for stashed files.
+        #    if $(git rev-parse --verify refs/stash &>/dev/null); then
+        #        s+='$';
+        #    fi;
+        #fi;
 
         # get the short symbolic ref.
         # if head isn’t a symbolic ref, get the short sha for the latest commit
