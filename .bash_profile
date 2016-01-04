@@ -1,5 +1,5 @@
 # add `~/bin` to the `$path`
-export PATH="/usr/local/bin:$HOME/bin:$PATH";
+export PATH="/usr/local/bin:$HOME/bin:$HOME/.rbenv/bin:$PATH";
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.
