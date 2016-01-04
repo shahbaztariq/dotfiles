@@ -16,3 +16,8 @@ function fs() {
         du $arg .[^.]* *;
     fi;
 }
+
+# get image date taken
+function image_date() {
+    identify -format %[EXIF:DateTime] $@
+}
