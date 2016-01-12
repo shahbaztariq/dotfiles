@@ -295,46 +295,31 @@
 	<true/>
 	<key>MaxVertically</key>
 	<false/>
-	<key>NSColorPanelMode</key>
-	<string>1</string>
-	<key>NSColorPickerSlidersDefaults</key>
-	<string>1</string>
-	<key>NSFontPanelAttributes</key>
-	<string>1, 0</string>
 	<key>NSNavLastRootDirectory</key>
-	<string>~/Desktop</string>
+	<string>~</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
-	<string>{712, 459}</string>
+	<string>{712, 470}</string>
 	<key>NSQuotedKeystrokeBinding</key>
 	<string></string>
 	<key>NSRepeatCountBinding</key>
 	<string></string>
 	<key>NSScrollAnimationEnabled</key>
 	<false/>
-	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
-	<dict>
-		<key>TB Is Shown</key>
-		<integer>1</integer>
-	</dict>
-	<key>NSWindow Frame NSColorPanel</key>
-	<string>427 300 409 437 0 0 1680 1027 </string>
-	<key>NSWindow Frame NSFontPanel</key>
-	<string>701 110 673 352 0 0 1440 877 </string>
 	<key>NSWindow Frame Preferences</key>
-	<string>541 302 924 485 0 0 1680 1027 </string>
+	<string>-1510 17 924 485 -1920 -153 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>303 403 985 446 0 0 1680 1027 </string>
+	<string>-1412 50 985 446 -1920 -153 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>315 468 970 446 0 0 1680 1027 </string>
+	<string>-1846 509 1385 446 -1920 -153 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>271 49 985 446 0 0 1680 1027 </string>
+	<string>-1149 235 985 446 -1920 -153 1920 1177 </string>
 	<key>NeverWarnAboutShortLivedSessions_9B459171-DE1A-4DBE-8272-1547BF4FD1C3</key>
 	<true/>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
 			<key>ASCII Anti Aliased</key>
-			<false/>
+			<true/>
 			<key>Allow Title Reporting</key>
 			<false/>
 			<key>Ambiguous Double Width</key>
@@ -1059,9 +1044,9 @@
 		</dict>
 	</array>
 	<key>NoSyncTimeOfLastPromo</key>
-	<real>468758578.99399197</real>
+	<real>473605084.61107099</real>
 	<key>NoSyncTimeOfLastPromoDownload</key>
-	<real>473472252.05948198</real>
+	<real>473777885.99989599</real>
 	<key>OnlyWhenMoreTabs</key>
 	<true/>
 	<key>OpenArrangementAtStartup</key>
@@ -1108,7 +1093,7 @@
 		</dict>
 	</dict>
 	<key>PrefsCustomFolder</key>
-	<string>/Users/shahbaz/Desktop</string>
+	<string>/Users/shahbaz.tariq/.dotfiles/.settings/</string>
 	<key>PromptOnQuit</key>
 	<true/>
 	<key>QuitWhenAllWindowsClosed</key>
@@ -1124,7 +1109,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-01-04T13:19:51Z</date>
+	<date>2016-01-06T13:27:53Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
