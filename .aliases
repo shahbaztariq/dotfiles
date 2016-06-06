@@ -41,3 +41,6 @@ alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[
 
 # recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+
+# brew/cask stuff
+alias brew-cask-update="curl -s https://gist.githubusercontent.com/atais/9c72e469b1cbec35c7c430ce03de2a6b/raw/1b7b891e6eff3b42edb4ada219764f12aefb04ca/cask_upgrade.sh | bash /dev/stdin"

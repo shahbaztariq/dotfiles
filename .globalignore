@@ -18,8 +18,8 @@
 *.rar
 *.zip
 
-# Security Files
-################
+# Security Files #
+##################
 *.pem
 
 # Logs and databases #
@@ -58,3 +58,9 @@ sftp-config*.json.local
 sftp-config*.json.remote
 Vagrantfile.ssst
 .phpintel
+
+# MG #
+######
+*.styles.cache.css
+*.css
+*.scripts.min.cache.js
