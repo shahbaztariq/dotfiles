@@ -1,5 +1,5 @@
 # add `~/bin` to the `$path`
-export PATH="/usr/local/bin:$HOME/bin:$HOME/.rbenv/bin:$PATH";
+export PATH="/usr/local/bin:$HOME/bin:$PATH";
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.
@@ -30,5 +30,3 @@ elif [ -f /etc/bash_completion ]; then
 elif [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
 fi;
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
