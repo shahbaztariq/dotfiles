@@ -1,3 +1,5 @@
 [ -n "$PS1" ] && source ~/.bash_profile;
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+	source /etc/profile.d/vte.sh
+fi
