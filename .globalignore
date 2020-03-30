@@ -7,4 +7,4 @@ Thumbs.db
 .sass-cache
 .project
 /.vagrant
-Vagrantfile.ssst
+.php_cs.cache
