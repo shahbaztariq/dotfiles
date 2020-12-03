@@ -1,5 +1,7 @@
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 # add `~/bin` to the `$path`
-export PATH="/usr/local/bin:$HOME/bin:$HOME/.rbenv/bin:$PATH";
+export PATH="/usr/local/bin:$HOME/bin:$PATH";
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.
@@ -12,9 +14,6 @@ unset file;
 # append to the bash history file, rather than overwriting it
 shopt -s histappend;
 
-# autocorrect typos in path names when using `cd`
-shopt -s cdspell;
-
 # enable some bash 4 features when possible:
 # * `autocd`, e.g. `**/qux` will enter `./foo/bar/baz/qux`
 # * recursive globbing, e.g. `echo **/*.txt`
@@ -23,10 +22,13 @@ for option in autocd globstar; do
 done;
 
 # add tab completion for many bash commands
-if which brew > /dev/null && [ -f "$(brew --prefix)/share/bash-completion/bash_completion" ]; then
-    source "$(brew --prefix)/share/bash-completion/bash_completion";
-elif [ -f /etc/bash_completion ]; then
-    source /etc/bash_completion;
-elif [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
-fi;
+if type brew &>/dev/null; then
+  HOMEBREW_PREFIX="$(brew --prefix)"
+  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+  else
+    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+      [[ -r "$COMPLETION" ]] && source "$COMPLETION"
+    done
+  fi
+fi
