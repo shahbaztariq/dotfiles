@@ -1,5 +1,3 @@
-# OS generated files #
-######################
 .DS_Store
 Thumbs.db
 .idea
@@ -7,4 +5,3 @@ Thumbs.db
 .project
 env.php.vagrant
 /.vagrant
-Vagrantfile.ssst

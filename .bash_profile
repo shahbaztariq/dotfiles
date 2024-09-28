@@ -1,7 +1,9 @@
-export BASH_SILENCE_DEPRECATION_WARNING=1
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # add `~/bin` to the `$path`
-export PATH="/usr/local/bin:$HOME/bin:$PATH";
+export PATH="$HOME/bin:$PATH";
+
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-15.0.2.jdk/Contents/Home"
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.

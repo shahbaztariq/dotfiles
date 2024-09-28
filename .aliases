@@ -4,11 +4,6 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-# shortcuts
-alias dl="cd ~/Downloads"
-alias dt="cd ~/Desktop"
-alias pr="cd ~/projects"
-
 # detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
     colorflag="--color"
@@ -31,13 +26,6 @@ alias egrep='egrep --color=auto'
 
 # enable aliases to be sudo’ed
 alias sudo='sudo '
-
-# get week number
-alias week='date +%V'
-
-# ip addresses
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
 # recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"

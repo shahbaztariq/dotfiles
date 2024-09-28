@@ -10,6 +10,7 @@
 [core]
     excludesfile = ~/.globalignore
     autocrlf = false
+	editor = nano
 
 [alias]
     diff = diff --ignore-space-at-eol -b -w --ignore-blank-lines
@@ -91,9 +92,19 @@
     helper = cache
 
 [diff]
-    tool = meld
+    tool = araxis
+
+[merge]
+    tool = araxis
+
+[difftool "araxis"]
+    path = /Applications/Araxis Merge.app/Contents/Utilities/compare
+
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
