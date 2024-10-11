@@ -1,9 +1,32 @@
+# required for bash on mac
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# add `~/bin` to the `$path`
+# for bash completions
+if type brew &>/dev/null
+then
+  HOMEBREW_PREFIX="$(brew --prefix)"
+  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
+  then
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+  else
+    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*
+    do
+      [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
+    done
+  fi
+fi
+
+# add `~/bin` to path
 export PATH="$HOME/bin:$PATH";
 
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-15.0.2.jdk/Contents/Home"
+# add go to path
+export PATH="/usr/local/go/bin:$PATH"
+
+# go home
+export GOPATH=$HOME/go:/Users/shahbaz.tariq/tapjoy
+
+# java home
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-15.jdk/Contents/Home"
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.
@@ -23,14 +46,7 @@ for option in autocd globstar; do
     shopt -s "$option" 2> /dev/null;
 done;
 
-# add tab completion for many bash commands
-if type brew &>/dev/null; then
-  HOMEBREW_PREFIX="$(brew --prefix)"
-  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
-  else
-    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
-      [[ -r "$COMPLETION" ]] && source "$COMPLETION"
-    done
-  fi
-fi
+
+# Added by OrbStack: command-line tools and integration
+# This won't be added again if you remove it.
+source ~/.orbstack/shell/init.bash 2>/dev/null || :
