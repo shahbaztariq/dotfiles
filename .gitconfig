@@ -92,13 +92,16 @@
     helper = cache
 
 [diff]
-    tool = araxis
+    tool = bc
 
 [merge]
-    tool = araxis
+    tool = bc
 
-[difftool "araxis"]
-    path = /Applications/Araxis Merge.app/Contents/Utilities/compare
+[difftool "bc"]
+    trustExitCode = true
+
+[mergetool "bc"]
+    trustExitCode = true
 
 [filter "lfs"]
     clean = git-lfs clean -- %f
@@ -108,3 +111,7 @@
 
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[init]
+	defaultBranch = main
+
+
