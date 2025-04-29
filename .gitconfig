@@ -99,11 +99,6 @@
     insteadOf = https://github.com/
 
 [init]
-    defaultBranch = main
+	defaultBranch = main
 
-[mergetool "juxta"]
-	cmd = juxta _mergetool --base \"${BASE:-/dev/null}\" --local \"$LOCAL\" --remote \"$REMOTE\" --merged \"${MERGED:-/dev/null}\"
-	trustExitCode = true
-[difftool "juxta"]
-	cmd = juxta _difftool --local \"$LOCAL\" --remote \"$REMOTE\" --merged \"$MERGED\"
-	trustExitCode = true
+
