@@ -1,7 +1,9 @@
 .DS_Store
 Thumbs.db
-.idea
-.sass-cache
-.project
-env.php.vagrant
+/.idea
+/.sass-cache
+/.project
+/env.php.vagrant
 /.vagrant
+/ray.php
+/dump.sql.gz

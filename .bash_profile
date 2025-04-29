@@ -22,11 +22,18 @@ export PATH="$HOME/bin:$PATH";
 # add go to path
 export PATH="/usr/local/go/bin:$PATH"
 
+# araxis merge
+export PATH="/Applications/Araxis\ Merge.app/Contents/Utilities:$PATH"
+
+# mysql utils
+export PATH="/opt/homebrew/opt/mysql-client@8.0/bin:$PATH"
+
 # go home
 export GOPATH=$HOME/go:/Users/shahbaz.tariq/tapjoy
 
 # java home
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-15.jdk/Contents/Home"
+
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.
@@ -50,3 +57,8 @@ done;
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init.bash 2>/dev/null || :
+
+# BEGIN SNIPPET: Magento Cloud CLI configuration
+HOME=${HOME:-'/Users/shahbaz.tariq'}
+export PATH="$HOME/"'.magento-cloud/bin':"$PATH"
+if [ -f "$HOME/"'.magento-cloud/shell-config.rc' ]; then . "$HOME/"'.magento-cloud/shell-config.rc'; fi # END SNIPPET
