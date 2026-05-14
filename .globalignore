@@ -1,5 +1,6 @@
 .DS_Store
 Thumbs.db
+/.claude
 /.idea
 /.sass-cache
 /.project

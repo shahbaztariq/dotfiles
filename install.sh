@@ -21,3 +21,8 @@ ln -nfs $DOTDIR/.functions ~/
 ln -nfs $DOTDIR/.gitconfig ~/
 ln -nfs $DOTDIR/.globalignore ~/
 ln -nfs $DOTDIR/.inputrc ~/
+
+if [ -f "$DOTDIR/.exports" ]; then
+  rm -rf ~/.exports
+  ln -nfs $DOTDIR/.exports ~/
+fi

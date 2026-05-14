@@ -81,16 +81,26 @@
     helper = cache
 
 [diff]
-    tool = araxis
+    tool = meld
 
 [merge]
-    tool = araxis
+    tool = meld
 
 [difftool "araxis"]
     path = /opt/homebrew/bin/araxiscompare
 
 [mergetool "araxis"]
     path = /opt/homebrew/bin/araxiscompare
+
+[difftool "meld"]
+    prompt = false
+    trustExitCode = true
+    cmd = open -W -a Meld --args \"$LOCAL\" \"$PWD/$REMOTE\"
+
+[mergetool "meld"]
+    prompt = false
+    trustExitCode = true
+    cmd = open -W -a Meld --args --auto-merge \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" --output=\"$PWD/$MERGED\"
 
 [filter "lfs"]
     clean = git-lfs clean -- %f
