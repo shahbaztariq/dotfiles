@@ -8,3 +8,4 @@ Thumbs.db
 /.vagrant
 /ray.php
 /dump.sql.gz
+**/.claude/settings.local.json
