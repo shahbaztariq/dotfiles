@@ -21,6 +21,14 @@
     excludesfile = ~/.globalignore
     autocrlf = false
     editor = nano
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    line-numbers = true
 
 [alias]
     diff = diff --ignore-space-at-eol -b -w --ignore-blank-lines
