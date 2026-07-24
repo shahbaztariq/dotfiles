@@ -29,3 +29,11 @@ set skip-completed-text on
 set input-meta on
 set output-meta on
 set convert-meta off
+
+# case-insensitive completion, e.g. `cd doc<tab>` matches `Documents`
+set completion-ignore-case on
+
+# color completion candidates by file type (terminal ANSI palette) and
+# highlight the part already typed
+set colored-stats on
+set colored-completion-prefix on

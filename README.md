@@ -1,6 +1,6 @@
 # dotfiles
 
-Bash configuration for macOS: Solarized-style prompt with git status, colored CLI tools, fuzzy search, and git/readline settings. Everything is symlinked into `~` so edits in this repo take effect immediately.
+Bash configuration for macOS: git-aware prompt, fuzzy search, and git/readline settings. All colors come from the terminal's ANSI palette, so everything follows whatever Ghostty theme is active. Everything is symlinked into `~` so edits in this repo take effect immediately.
 
 ## Fresh machine setup
 
@@ -38,7 +38,7 @@ Bash configuration for macOS: Solarized-style prompt with git status, colored CL
 
 | File | Purpose |
 |---|---|
-| `.bash_profile` | PATH setup, sources the other dotfiles, history tuning, fzf, colored man pages |
+| `.bash_profile` | PATH setup, sources the other dotfiles, history tuning, fzf |
 | `.bash_prompt` | prompt: `user at host in dir on branch [+!?$]` |
 | `.aliases` | navigation shortcuts, `eza`/`bat` aliases, colored grep |
 | `.exports` | non-secret env vars; secrets are never exported at startup |

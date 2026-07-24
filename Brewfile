@@ -1,6 +1,6 @@
 # shell
 brew "bash"             # macOS ships bash 3.2 (2007); this is 5.x
-brew "bash-completion"
+brew "bash-completion@2"  # v1 targets bash 3.2; v2 is maintained and lazy-loads
 brew "fzf"
 
 brew "gh"               # github cli, authenticated via 1password plugin
