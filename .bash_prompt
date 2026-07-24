@@ -45,46 +45,28 @@ prompt_git() {
 
         [ -n "${s}" ] && s=" [${s}]";
 
-        echo -e "${1}${branchName}${blue}${s}";
+        echo -e "${1}${branchName}${peach}${s}";
     else
         return;
     fi;
 }
 
-if tput setaf 1 &> /dev/null; then
-    tput sgr0; # reset colors
-    bold=$(tput bold);
-    reset=$(tput sgr0);
-    # Solarized colors, taken from http://git.io/solarized-colors.
-    black=$(tput setaf 0);
-    blue=$(tput setaf 33);
-    cyan=$(tput setaf 37);
-    green=$(tput setaf 64);
-    orange=$(tput setaf 166);
-    purple=$(tput setaf 125);
-    red=$(tput setaf 124);
-    violet=$(tput setaf 61);
-    white=$(tput setaf 15);
-    yellow=$(tput setaf 136);
-else
-    bold='';
-    reset="\e[0m";
-    black="\e[1;30m";
-    blue="\e[1;34m";
-    cyan="\e[1;36m";
-    green="\e[1;32m";
-    orange="\e[1;33m";
-    purple="\e[1;35m";
-    red="\e[1;31m";
-    violet="\e[1;35m";
-    white="\e[1;37m";
-    yellow="\e[1;33m";
-fi;
+# ansi palette: the terminal theme defines what each slot renders as, so
+# the prompt automatically matches any ghostty theme — switch freely.
+bold=$'\e[1m';
+reset=$'\e[0m';
+red=$'\e[31m';
+green=$'\e[32m';
+yellow=$'\e[33m';
+blue=$'\e[34m';
+mauve=$'\e[35m';   # magenta slot
+subtext=$'\e[37m'; # "white" slot; a muted gray in most themes
+peach=$'\e[91m';   # bright-red slot; orange/salmon in most themes
 
 # color the prompt symbol red when the last command failed.
 prompt_symbol() {
     if [ "${LAST_EXIT:-0}" -eq 0 ]; then
-        echo -e "${white}";
+        echo -e "${subtext}";
     else
         echo -e "${red}";
     fi;
@@ -97,7 +79,7 @@ PROMPT_COMMAND="LAST_EXIT=\$?${PROMPT_COMMAND:+; $PROMPT_COMMAND}";
 if [[ "${USER}" == "root" ]]; then
     userStyle="${red}";
 else
-    userStyle="${orange}";
+    userStyle="${blue}";
 fi;
 
 # highlight the hostname when connected via ssh.
@@ -111,11 +93,11 @@ fi;
 PS1="\[\033]0;\w\007\]";
 PS1+="\[${bold}\]\n"; # newline
 PS1+="\[${userStyle}\]\u"; # username
-PS1+="\[${white}\] at ";
+PS1+="\[${subtext}\] at ";
 PS1+="\[${hostStyle}\]\h"; # host
-PS1+="\[${white}\] in ";
+PS1+="\[${subtext}\] in ";
 PS1+="\[${green}\]\w"; # working directory
-PS1+="\$(prompt_git \"${white} on ${violet}\")"; # Git repository details
+PS1+="\$(prompt_git \"${subtext} on ${mauve}\")"; # Git repository details
 PS1+="\n";
 PS1+="\[\$(prompt_symbol)\]\$ \[${reset}\]"; # `$` (red if last command failed)
 export PS1;

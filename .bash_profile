@@ -43,7 +43,12 @@ export HISTTIMEFORMAT='%F %T  ';
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND; }history -a";
 
 # fzf: fuzzy ctrl-r history search, ctrl-t file search, alt-c cd
+# --color=16 makes fzf use the terminal theme's palette
+export FZF_DEFAULT_OPTS='--color=16';
 command -v fzf > /dev/null 2>&1 && eval "$(fzf --bash)";
+
+# bat: use the terminal theme's palette instead of a bundled theme
+export BAT_THEME='ansi';
 
 # 1password shell plugins (created by `op plugin init <tool>`, e.g. gh)
 [ -f ~/.config/op/plugins.sh ] && source ~/.config/op/plugins.sh;
