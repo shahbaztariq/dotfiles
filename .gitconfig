@@ -9,7 +9,7 @@
     format = ssh
 
 [gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 [commit]
     gpgsign = true
@@ -31,8 +31,6 @@
     line-numbers = true
 
 [alias]
-    diff = diff --ignore-space-at-eol -b -w --ignore-blank-lines
-
     # show changed files for a commit
     cf = show --pretty="format:" --name-only
 
@@ -44,7 +42,7 @@
     br = branch
     cl = clone
     co = checkout
-    
+
     # Ignore/unignore changes to files (like a local .gitignore)
     # http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
     assume = update-index --assume-unchanged
@@ -76,14 +74,8 @@
 [help]
     autocorrect = 1
 
-[status]
-    submodule = 1
-
 [push]
     default = current
-
-[pack]
-    threads = 0
 
 [credential]
     helper = cache
@@ -93,12 +85,6 @@
 
 [merge]
     tool = meld
-
-[difftool "araxis"]
-    path = /opt/homebrew/bin/araxiscompare
-
-[mergetool "araxis"]
-    path = /opt/homebrew/bin/araxiscompare
 
 [difftool "meld"]
     prompt = false
@@ -110,16 +96,9 @@
     trustExitCode = true
     cmd = open -W -a Meld --args --auto-merge \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" --output=\"$PWD/$MERGED\"
 
-[filter "lfs"]
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
-
 [url "git@github.com:"]
     insteadOf = https://github.com/
 
 [init]
-	defaultBranch = main
-
+    defaultBranch = main
 
