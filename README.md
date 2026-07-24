@@ -39,7 +39,7 @@ Bash configuration for macOS: Solarized-style prompt with git status, colored CL
 | File | Purpose |
 |---|---|
 | `.bash_profile` | PATH setup, sources the other dotfiles, history tuning, fzf, colored man pages |
-| `.bash_prompt` | prompt: `user at host in dir on branch [+!?$]`, with a red `$` when the last command failed |
+| `.bash_prompt` | prompt: `user at host in dir on branch [+!?$]` |
 | `.aliases` | navigation shortcuts, `eza`/`bat` aliases, colored grep |
 | `.exports` | non-secret env vars; secrets are never exported at startup |
 | `.functions` | `mkd` — mkdir and cd in one step |

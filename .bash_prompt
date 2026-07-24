@@ -63,18 +63,6 @@ mauve=$'\e[35m';   # magenta slot
 subtext=$'\e[37m'; # "white" slot; a muted gray in most themes
 peach=$'\e[91m';   # bright-red slot; orange/salmon in most themes
 
-# color the prompt symbol red when the last command failed.
-prompt_symbol() {
-    if [ "${LAST_EXIT:-0}" -eq 0 ]; then
-        echo -e "${subtext}";
-    else
-        echo -e "${red}";
-    fi;
-}
-
-# capture the last exit status before anything else runs.
-PROMPT_COMMAND="LAST_EXIT=\$?${PROMPT_COMMAND:+; $PROMPT_COMMAND}";
-
 # highlight the user name when logged in as root.
 if [[ "${USER}" == "root" ]]; then
     userStyle="${red}";
@@ -99,7 +87,7 @@ PS1+="\[${subtext}\] in ";
 PS1+="\[${green}\]\w"; # working directory
 PS1+="\$(prompt_git \"${subtext} on ${mauve}\")"; # Git repository details
 PS1+="\n";
-PS1+="\[\$(prompt_symbol)\]\$ \[${reset}\]"; # `$` (red if last command failed)
+PS1+="\[${subtext}\]\$ \[${reset}\]"; # `$`
 export PS1;
 
 PS2="\[${yellow}\]→ \[${reset}\]";
