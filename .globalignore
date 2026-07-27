@@ -1,9 +1,5 @@
 .DS_Store
 Thumbs.db
-/.claude
 /.idea
-/.sass-cache
 /.project
-/ray.php
-/dump.sql.gz
 **/.claude/settings.local.json

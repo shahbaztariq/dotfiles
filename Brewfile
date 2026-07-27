@@ -10,9 +10,6 @@ brew "git-delta"        # syntax-highlighted git diffs
 brew "eza"              # modern ls
 brew "bat"              # syntax-highlighted cat
 
-# project tooling (referenced in .bash_profile PATH)
-brew "ansible@10"
-
 # apps the dotfiles depend on
 cask "1password@beta"      # commit signing + secrets (see .exports)
 cask "1password-cli@beta"
