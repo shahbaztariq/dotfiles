@@ -9,15 +9,6 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # add `~/bin` to path
 export PATH="$HOME/bin:$PATH";
 
-# araxis merge
-export PATH="/Applications/Araxis\ Merge.app/Contents/Utilities:$PATH"
-
-# mysql utils
-export PATH="/opt/homebrew/opt/mysql-client@8.0/bin:$PATH"
-
-# ansible
-export PATH="/opt/homebrew/opt/ansible@10/bin:$PATH"
-
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.
 # * ~/.extra can be used for other settings you don’t want to commit.
@@ -39,9 +30,3 @@ done;
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init.bash 2>/dev/null || :
-
-# BEGIN SNIPPET: Magento Cloud CLI configuration
-HOME=${HOME:-'/Users/shahbaz'}
-export PATH="$HOME/"'.magento-cloud/bin':"$PATH"
-if [ -f "$HOME/"'.magento-cloud/shell-config.rc' ]; then . "$HOME/"'.magento-cloud/shell-config.rc'; fi
-# END SNIPPET
