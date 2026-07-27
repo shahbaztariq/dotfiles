@@ -1,5 +1,3 @@
-# -*- sh -*-
-
 [user]
     name = Shahbaz Tariq
     email = shahbaz@a1techdeals.com
@@ -9,7 +7,7 @@
     format = ssh
 
 [gpg "ssh"]
-  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 [commit]
     gpgsign = true
@@ -19,12 +17,17 @@
 
 [core]
     excludesfile = ~/.globalignore
-    autocrlf = false
     editor = nano
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    line-numbers = true
 
 [alias]
-    diff = diff --ignore-space-at-eol -b -w --ignore-blank-lines
-
     # show changed files for a commit
     cf = show --pretty="format:" --name-only
 
@@ -36,7 +39,7 @@
     br = branch
     cl = clone
     co = checkout
-    
+
     # Ignore/unignore changes to files (like a local .gitignore)
     # http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
     assume = update-index --assume-unchanged
@@ -46,51 +49,36 @@
     assumeall = "!git status -s | awk {'print $2'} | xargs git assume"
     unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
 
-[color]
-    ui = auto
-
-[color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
-
-[color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
-
-[color "status"]
-    added = yellow
-    changed = green
-    untracked = cyan
-
 [help]
-    autocorrect = 1
-
-[status]
-    submodule = 1
+    # suggest the corrected command and ask, instead of a 0.1s countdown
+    autocorrect = prompt
 
 [push]
     default = current
+    # create the upstream branch automatically on first push
+    autoSetupRemote = true
 
-[pack]
-    threads = 0
+[fetch]
+    # drop local refs to branches deleted on the remote
+    prune = true
 
-[credential]
-    helper = cache
+[rebase]
+    # stash/unstash automatically when rebasing with a dirty tree
+    autostash = true
+
+[rerere]
+    # remember conflict resolutions and replay them
+    enabled = true
 
 [diff]
     tool = meld
+    # render moved code distinctly from added/deleted (delta supports this)
+    colorMoved = default
 
 [merge]
     tool = meld
-
-[difftool "araxis"]
-    path = /opt/homebrew/bin/araxiscompare
-
-[mergetool "araxis"]
-    path = /opt/homebrew/bin/araxiscompare
+    # conflict markers include the common-base version
+    conflictstyle = zdiff3
 
 [difftool "meld"]
     prompt = false
@@ -102,16 +90,9 @@
     trustExitCode = true
     cmd = open -W -a Meld --args --auto-merge \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" --output=\"$PWD/$MERGED\"
 
-[filter "lfs"]
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
-
 [url "git@github.com:"]
     insteadOf = https://github.com/
 
 [init]
-	defaultBranch = main
-
+    defaultBranch = main
 
