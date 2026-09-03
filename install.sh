@@ -16,6 +16,7 @@ files=(
     .gitconfig
     .globalignore
     .inputrc
+    .secrets
 )
 
 for file in "${files[@]}"; do

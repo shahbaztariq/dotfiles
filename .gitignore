@@ -1,2 +1,3 @@
+/.secrets
 /.vault_*
 .DS_Store

@@ -6,10 +6,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # add `~/bin` to path
 export PATH="$HOME/bin:$PATH";
 
-# load the shell dotfiles, and then some:
-# * ~/.path can be used to extend `$path`.
-# * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,bash_prompt,exports,aliases,functions,extra}; do
+for file in ~/.{path,bash_prompt,exports,aliases,functions,extra,secrets}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
 unset file;
