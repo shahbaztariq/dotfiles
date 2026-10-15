@@ -3,7 +3,7 @@ brew "bash"             # macOS ships bash 3.2 (2007); this is 5.x
 brew "bash-completion@2"  # v1 targets bash 3.2; v2 is maintained and lazy-loads
 brew "fzf"
 
-brew "gh"               # github cli, authenticated via 1password plugin
+brew "gh"               # github cli
 
 # colors & cli quality of life
 brew "git-delta"        # syntax-highlighted git diffs

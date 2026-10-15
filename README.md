@@ -26,14 +26,6 @@ Bash configuration for macOS: git-aware prompt, fuzzy search, and git/readline s
    chsh -s /opt/homebrew/bin/bash
    ```
 
-4. **Sign in to 1Password** (app + CLI integration under Settings → Developer), then wire up the GitHub CLI plugin:
-
-   ```bash
-   op plugin init gh
-   ```
-
-   Secrets live in the **"dotfiles secrets"** item in the Private vault — nothing secret is stored in this repo, on disk, or in shell env vars. `gh` authenticates transparently via the plugin (Touch ID only when actually used); anything else can fetch ad hoc, e.g. `op read 'op://Private/dotfiles secrets/ghcr_pat'`.
-
 ## What's inside
 
 | File | Purpose |
