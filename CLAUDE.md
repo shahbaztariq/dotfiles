@@ -4,6 +4,13 @@ This repo is the bash setup, the Ghostty theme and the login banner for the user
 into `~` by `install.sh`, so an edit here takes effect in the next new shell. It is the source of truth on these
 Macs: change files here, not the links in `~`.
 
+## Branches
+
+**One branch per Mac, named after it (`hostname -s`), and each stands alone.** `omnibytes` is this work laptop's
+branch. Work on the Mac's own branch, commit and push there, and **never merge into `main`** or between the
+branches. A change wanted on another Mac is made on that Mac's branch too (cherry-pick it or redo it). A new Mac
+gets a new branch. Don't suggest merging or opening pull requests.
+
 What a Mac gets once it's applied:
 
 1. **The Ghostty theme Lab Sunset Rally**: a plum background (`#1b1026`), warm text, a sunset-orange cursor
@@ -77,8 +84,9 @@ fzf (`--color=16`), bat (`BAT_THEME=ansi`), completion colours and the prompt fo
 The user does the steps that need a password, `sudo` or a sign-in. An agent can do the rest.
 
 1. **Homebrew** (user): `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-2. **Clone**: `git clone git@github.com:shahbaztariq/dotfiles.git ~/.dotfiles` (needs a GitHub SSH key, which
-   1Password's SSH agent provides once signed in. Otherwise clone over HTTPS).
+2. **Clone the Mac's branch**: `git clone -b "$(hostname -s)" git@github.com:shahbaztariq/dotfiles.git ~/.dotfiles`
+   (needs a GitHub SSH key, which 1Password's SSH agent provides once signed in. Otherwise clone over HTTPS). For a
+   Mac that has no branch yet, clone another Mac's branch and `git switch -c "$(hostname -s)"` (see Branches).
 3. **Install**: `cd ~/.dotfiles && ./install.sh`. This also runs `brew bundle`, so ask first, and on `omnibytes` use
    `--no-brew`. See "Applying it to a Mac" below.
 4. **Login shell to Homebrew's bash 5** (user; `sudo`). macOS's bash 3.2 can't run this setup:
