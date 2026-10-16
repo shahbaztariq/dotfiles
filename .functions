@@ -1,4 +1,51 @@
+# Shell functions for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo
+# (role dotfiles).
 # create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$_";
 }
+
+# tmux shortcuts, only where tmux is installed (the servers; not the Macs)
+if command -v tmux > /dev/null 2>&1; then
+
+    # tmux: t attaches to the session "main", t <name> to that session, starting it if
+    # it doesn't exist; inside tmux it switches to it instead, as tmux won't nest. t ? picks one with fzf (below), and
+    # t <Tab> completes session names.
+    function t() {
+        if [ "${1:-}" = "?" ]; then __lab_t_pick; return; fi
+        local s="${1:-main}"
+        if [ -n "$TMUX" ]; then
+            tmux has-session -t "=$s" 2>/dev/null || tmux new -d -s "$s" || return
+            tmux switch-client -t "=$s"
+        else
+            tmux new -A -s "$s"
+        fi
+    }
+
+    # t ?: the sessions in fzf, each with its windows, and when it was last used or that it's attached now; the preview
+    # lists its windows and their folders. Enter goes to the highlighted one; a name that matches none starts it; Esc
+    # does nothing.
+    function __lab_t_pick() {
+        command -v fzf >/dev/null || { tmux ls; return; }
+        local now=${EPOCHSECONDS} name n att act state lines=() out query sel
+        while IFS=$'\t' read -r name n att act; do
+            if ((att)); then state='attached'; else state="$(__lab_duration $((now - act)) 2>/dev/null) idle"; fi
+            lines+=("$(printf '%-16s %2d window%-1s · %s' "${name}" "${n}" "$( ((n == 1)) || echo s)" "${state}")")
+        done < <(tmux ls -F $'#{session_name}\t#{session_windows}\t#{session_attached}\t#{session_activity}' 2>/dev/null)
+        out=$( { ((${#lines[@]})) && printf '%s\n' "${lines[@]}"; } | fzf --height=~50% --reverse --print-query \
+            --prompt='session › ' --header='enter: go there · a new name: start it · esc: cancel' \
+            --preview='tmux list-windows -t ={1} -F "#{window_index}: #{window_name}  #{pane_current_path}"' \
+            --preview-window='right,55%,border-left')
+        [ $? -eq 130 ] && return 0   # esc
+        query=$(sed -n 1p <<<"${out}"); sel=$(sed -n 2p <<<"${out}")
+        if [ -n "${sel}" ]; then t "${sel%% *}"; elif [ -n "${query}" ]; then t "${query}"; fi
+    }
+
+    # t <Tab>: the sessions on this server
+    function __lab_t_complete() {
+        ((COMP_CWORD == 1)) || return 0
+        COMPREPLY=($(compgen -W "$(tmux ls -F '#{session_name}' 2>/dev/null)" -- "${COMP_WORDS[1]}"))
+    }
+    complete -F __lab_t_complete t
+
+fi

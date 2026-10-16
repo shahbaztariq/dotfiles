@@ -1,27 +1,40 @@
+# Shell aliases for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo
+# (role dotfiles). Where macOS and Linux differ: the ls fallback's flags (BSD vs GNU), bat's name (batcat on
+# Debian/Ubuntu), and the .DS_Store cleanup (macOS only).
+
 # easier navigation
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-# ls stuff — use eza when available, fall back to BSD ls
+# ls stuff — use eza when available, fall back to the system ls
 if command -v eza > /dev/null 2>&1; then
     alias ls="eza"
     alias l="eza -lF --git"
     alias ll="eza -l --git"
     alias la="eza -laF --git"
     alias lsd="eza -lD"
-else
+elif [[ "${OSTYPE}" == darwin* ]]; then
     alias l="ls -lFG"
     alias ll="ls -lhG"
     alias la="ls -laFG"
     alias lsd="ls -lFG | grep --color=never '^d'"
     alias ls="command ls -G"
+else
+    alias l="ls -lF --color=auto"
+    alias ll="ls -lh --color=auto"
+    alias la="ls -laF --color=auto"
+    alias lsd="ls -lF --color=always | grep --color=never '^d'"
+    alias ls="command ls --color=auto"
 fi
 
-# bat: syntax-highlighted cat (plain `command cat` still works when needed)
+# bat: syntax-highlighted cat (plain `command cat` still works when needed); batcat on Debian/Ubuntu
 if command -v bat > /dev/null 2>&1; then
     alias cat="bat --paging=never"
+elif command -v batcat > /dev/null 2>&1; then
+    alias cat="batcat --paging=never"
+    alias bat="batcat"
 fi
 
 # always enable colored `grep` output
@@ -33,4 +46,6 @@ alias egrep='egrep --color=auto'
 alias sudo='sudo '
 
 # recursively delete `.DS_Store` files
-alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+if [[ "${OSTYPE}" == darwin* ]]; then
+    alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
+fi

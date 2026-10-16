@@ -1,0 +1,26 @@
+# Lab Sunset Rally: a synthwave rally sunset (from an image the user chose, 2026-10-15). A plum night sky behind
+# everything; dusk-violet folders, hot-pink branch, sun-yellow warnings, dust-red errors, lake-glow links, mint for
+# success, a sunset-orange cursor. The Macs' theme; each server keeps its own GitHub Dark shade (role banner), so
+# local and remote look unmistakably different. Managed by the lab repo (role mac).
+palette = 0=#2a1b3d
+palette = 1=#ff5a5f
+palette = 2=#6ee7b7
+palette = 3=#ffd166
+palette = 4=#a78bfa
+palette = 5=#ff6ac1
+palette = 6=#7dd3fc
+palette = 7=#e9ddf0
+palette = 8=#6b5285
+palette = 9=#ff7a70
+palette = 10=#8ef0c8
+palette = 11=#ffe08a
+palette = 12=#c4b0ff
+palette = 13=#ff8fd2
+palette = 14=#a5e3ff
+palette = 15=#fff4e0
+background = #1b1026
+foreground = #e6d3ec
+cursor-color = #ff8a3d
+cursor-text = #1b1026
+selection-background = #4c2a63
+selection-foreground = #fff4e0

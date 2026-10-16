@@ -1,43 +1,30 @@
+# The prompt for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo (role
+# dotfiles). `user at host in dir on branch [+!?$]` in the terminal theme's colours; over SSH the host in its banner
+# gradient (prompt_host; on the macs, always); the last command's failure and duration, and a notification for long ones (__lab_precmd).
 prompt_git() {
-    local s='';
-    local branchName='';
-
-    # check if the current directory is in a git repository.
-    if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
-        # check if the current directory is in .git before running git checks.
-        # skipped entirely if `git config bash.showDirtyState false` is set
-        # (useful in huge repos where the status scan is slow).
-        if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ] && \
-           [ "$(git config --get bash.showDirtyState)" != 'false' ]; then
-            # one `git status` call covers staged, unstaged and untracked.
-            local status=$'\n'"$(git status --porcelain --ignore-submodules 2> /dev/null)";
-
-            # staged: any line whose first column is a change letter.
-            [[ "${status}" == *$'\n'[MADRC]* ]] && s+='+';
-
-            # unstaged: any line whose second column is M or D.
-            [[ "${status}" == *$'\n'?[MD]* ]] && s+='!';
-
-            # untracked files.
-            [[ "${status}" == *$'\n''??'* ]] && s+='?';
-
-            # stashed files (cheap ref lookup).
-            git rev-parse --verify refs/stash &>/dev/null && s+='$';
-        fi;
-
-        # get the short symbolic ref.
-        # if head isn’t a symbolic ref, get the short sha for the latest commit
-        # otherwise, just give up.
-        branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
-            git rev-parse --short HEAD 2> /dev/null || \
-            echo '(unknown)')";
-
-        [ -n "${s}" ] && s=" [${s}]";
-
-        echo -e "${1}${branchName}${peach}${s}";
-    else
-        return;
+    # outside a repository: one git call and nothing shown
+    local where; where=$(git rev-parse --is-inside-work-tree 2>/dev/null) || return;
+    local branch='' oid='' s='' line;
+    # one `git status` gives the branch, the change markers and the stash; skipped where
+    # `git config bash.showDirtyState false` is set (useful in huge repos where the scan is slow), and inside .git
+    if [ "${where}" = true ] && [ "$(git config --get bash.showDirtyState)" != 'false' ]; then
+        local staged='' unstaged='' untracked='' stash='';
+        while IFS= read -r line; do
+            case "${line}" in
+                '# branch.head '*) branch=${line#\# branch.head };;
+                '# branch.oid '*) oid=${line#\# branch.oid };;
+                '# stash '*) stash='$';;
+                [12u]' '*) [[ "${line:2:1}" != . ]] && staged='+'; [[ "${line:3:1}" == [MD] ]] && unstaged='!';;
+                '? '*) untracked='?';;
+            esac;
+        done < <(git status --porcelain=v2 --branch --show-stash --ignore-submodules 2> /dev/null);
+        s="${staged}${unstaged}${untracked}${stash}";
+        [ "${branch}" = '(detached)' ] && branch="${oid:0:7}";
     fi;
+    # no status (turned off, or inside .git): the branch, or the short commit when detached
+    [ -n "${branch}" ] || branch=$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)');
+    [ -n "${s}" ] && s=" [${s}]";
+    echo -e "${1}${branch}${peach}${s}";
 }
 
 # ansi palette: the terminal theme defines what each slot renders as, so
@@ -66,18 +53,115 @@ else
     hostStyle="${yellow}";
 fi;
 
+# the hostname shaded letter by letter in the host's gradient: over ssh on a server, from its banner (role banner,
+# /etc/lab-banner/banner.conf), so the prompt matches the login banner; on a mac, from ~/.config/lab-banner/
+# banner.conf (role mac), where the username joins in: one sweep across `user at host` (root stays red), as the
+# mac's theme colour for the username wouldn't match. these are fixed 24-bit colours, not theme slots, picked for a
+# dark theme. without either the names keep their theme colours (host bold red over ssh, yellow locally).
+userPart="\[${userStyle}\]\u";
+hostPart="\[${hostStyle}\]\h";
+prompt_names() {
+    local conf esc=$'\e' u="${USER}" h="${HOSTNAME%%.*}" from to i t n k text out mac=0;
+    if [[ -r /etc/lab-banner/banner.conf ]]; then conf=/etc/lab-banner/banner.conf;   # only servers have it
+    elif [[ -r "${HOME}/.config/lab-banner/banner.conf" ]]; then conf="${HOME}/.config/lab-banner/banner.conf"; mac=1;
+    else return 0; fi;
+    read -r from to < <(. "${conf}"; echo "${BANNER_FROM} ${BANNER_TO}");
+    [[ "${from}" =~ ^#[0-9A-Fa-f]{6}$ && "${to}" =~ ^#[0-9A-Fa-f]{6}$ ]] || return 0;
+    local r1=$((16#${from:1:2})) g1=$((16#${from:3:2})) b1=$((16#${from:5:2}));
+    local r2=$((16#${to:1:2})) g2=$((16#${to:3:2})) b2=$((16#${to:5:2}));
+    # the sweep runs over the user's letters (on a mac, not root) and the host's, as one
+    ((mac)) && [[ "${u}" != root ]] || u='';
+    text="${u}${h}"; n=${#text}; out='';
+    for ((i = 0; i < n; i++)); do
+        t=$(( n > 1 ? i * 1000 / (n - 1) : 0 ));
+        out+="\[${esc}[38;2;$((r1 + (r2 - r1) * t / 1000));$((g1 + (g2 - g1) * t / 1000));$((b1 + (b2 - b1) * t / 1000))m\]${text:i:1}";
+        ((i == ${#u} - 1)) && k=${#out};
+    done;
+    if [[ -n "${u}" ]]; then userPart="${out:0:k}"; hostPart="${out:k}"; else hostPart="${out}"; fi;
+}
+prompt_names;
+unset -f prompt_names;
+
 # set the terminal title to the current working directory.
 PS1="\[\033]0;\w\007\]";
 PS1+="\[${bold}\]\n"; # newline
-PS1+="\[${userStyle}\]\u"; # username
+PS1+="${userPart}"; # username
 PS1+="\[${subtext}\] at ";
-PS1+="\[${hostStyle}\]\h"; # host
+PS1+="${hostPart}"; # host
 PS1+="\[${subtext}\] in ";
 PS1+="\[${green}\]\w"; # working directory
 PS1+="\$(prompt_git \"${subtext} on ${mauve}\")"; # Git repository details
+PS1+="\${__lab_ps}"; # the last command's failure and duration (__lab_precmd)
 PS1+="\n";
 PS1+="\[${subtext}\]\$ \[${reset}\]"; # `$`
 export PS1;
 
 PS2="\[${yellow}\]→ \[${reset}\]";
 export PS2;
+# only needed while building the prompt; the colours stay, the prompt and its hooks use them at every prompt
+unset userStyle hostStyle userPart hostPart;
+
+# every command is timed. The prompt's first line ends with "✘ <exit status>" in red after a failure (a signal by
+# name, Ctrl-C as ^C) and "took <time>" in yellow after one that ran 5 s or more (__lab_ps); after a quick success or
+# an empty line it shows neither. A command that runs for LAB_NOTIFY_AFTER seconds (30) or more sends a desktop
+# notification as it finishes, "✓ host" or "✘ host" with the command, its exit status and how long it took. It goes
+# to the terminal as OSC 777, which Ghostty shows as a macOS notification, over SSH and through tmux (wrapped for its
+# allow-passthrough). Interactive programs (editors, pagers, ssh, tmux, claude, a followed log, a shell in a
+# container) are left out, as finishing them is you quitting them. PS0 notes the start time, without a subshell.
+LAB_NOTIFY_AFTER="${LAB_NOTIFY_AFTER:-30}";
+__lab_t0='';
+__lab_ps='';
+__lab_duration() {
+    local s=$1;
+    if ((s >= 3600)); then printf '%dh %dm' $((s / 3600)) $((s % 3600 / 60));
+    elif ((s >= 60)); then printf '%dm %ds' $((s / 60)) $((s % 60));
+    else printf '%ds' "${s}"; fi;
+}
+__lab_precmd() {
+    local st=$? now=${EPOCHREALTIME/[.,]/} took ts cmd c w mark body osc sig o=$'\001' x=$'\002';
+    __lab_ps='';
+    [[ -n "${__lab_t0}" ]] || return 0;        # an empty line: nothing ran
+    took=$(( (now - __lab_t0) / 1000000 ));
+    __lab_t0='';
+    # for the prompt; \001 and \002 tell readline the colour codes take no room
+    if ((st)); then
+        if ((st > 128)) && sig=$(kill -l $((st - 128)) 2>/dev/null); then [[ "${sig}" == INT ]] && sig='^C';
+        else sig=${st}; fi;
+        __lab_ps+=" ${o}${red}${x}✘ ${sig}";
+    fi;
+    ((took >= 5)) && __lab_ps+="${__lab_ps:+${o}${subtext}${x} ·}${o}"$'\e[22m'"${yellow}${x} took $(__lab_duration "${took}")";
+    [[ -n "${__lab_ps}" ]] && __lab_ps+="${o}${bold}${x}";
+    ((took >= LAB_NOTIFY_AFTER)) || return 0;
+    # the command itself, from history; if history left it out (a leading space, HISTIGNORE), the last entry
+    # is older than the command's start, so it isn't used
+    read -r _ ts cmd <<<"$(HISTTIMEFORMAT='%s ' history 1)";
+    [[ "${ts}" =~ ^[0-9]+$ ]] && ((ts >= now / 1000000 - took - 1)) || cmd='';   # no timestamp: not this one
+    # each part of a pipeline or list counts: `docker logs app | less` ends when you quit less
+    while read -r c; do
+        while [[ "${c}" =~ ^(sudo|time|nice|nohup|command|exec)[[:space:]]+(.*) ]]; do c=${BASH_REMATCH[2]}; done;
+        w=${c%%[[:space:]]*}; w=${w##*/};
+        case "${w}" in
+            vi|vim|nvim|nano|less|more|man|htop|btop|top|atop|watch|ssh|mosh|tmux|t|claude|python|python3|node| \
+            irb|psql|mysql|mariadb|redis-cli|sqlite3|lazydocker|ncdu|mc|fzf|bash|sh|zsh|su) return 0 ;;
+        esac;
+        # following a log, or a shell inside a container: finishing it is you quitting it
+        [[ " ${c} " =~ ^\ (tail|journalctl|docker\ (compose\ )?logs|kubectl\ logs)(\ .*)?\ (-f|-F|--follow)\  ]] && return 0;
+        [[ " ${c} " =~ ^\ (docker\ (compose\ )?(run|exec)|kubectl\ exec)(\ .*)?\ (-it|-ti)\  ]] && return 0;
+    done <<<"${cmd//[|;&]/$'\n'}";
+    [[ -n "${cmd}" ]] || cmd='a command';
+    ((${#cmd} > 60)) && cmd="${cmd:0:59}…";
+    if ((st)); then mark='✘'; body="${cmd} · exit ${st} · $(__lab_duration "${took}")";
+    else mark='✓'; body="${cmd} · $(__lab_duration "${took}")"; fi;
+    body=${body//[$'\001'-$'\037';]/ };
+    osc=$'\e]777;notify;'"${mark} ${HOSTNAME%%.*};${body}"$'\a';
+    [[ -n "${TMUX}" ]] && osc=$'\ePtmux;'"${osc//$'\e'/$'\e\e'}"$'\e\\';
+    printf '%s' "${osc}";
+}
+if [[ "${PS0:-}" != *__lab_t0* ]]; then
+    # a zero-length slice of HOSTNAME, so it prints nothing; the slice must be of a set variable, or bash skips the
+    # arithmetic that saves the time
+    PS0='${HOSTNAME:0:$((__lab_t0 = ${EPOCHREALTIME/[.,]/}, 0))}'"${PS0:-}";
+fi;
+if [[ " ${PROMPT_COMMAND[*]:-} " != *__lab_precmd* ]]; then
+    PROMPT_COMMAND=(__lab_precmd "${PROMPT_COMMAND[@]}");
+fi;

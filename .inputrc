@@ -1,3 +1,5 @@
+# Readline for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo (role
+# dotfiles).
 # immediately add a trailing slash when autocompleting symlinks to directories
 set mark-symlinked-directories on
 
