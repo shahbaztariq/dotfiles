@@ -1,5 +1,5 @@
-# Shell aliases for omnibytes, linked from ~/.dotfiles: navigation, eza and bat when installed (with fallbacks),
-# coloured grep. The Linux branches (GNU ls flags, batcat) are leftovers from the lab repo this file came from.
+# Shell aliases for omnibytes, linked from ~/.dotfiles: navigation, eza and bat when installed (with fallbacks to
+# macOS's ls and cat), coloured grep.
 
 # easier navigation
 alias ..="cd .."
@@ -7,33 +7,24 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-# ls stuff — use eza when available, fall back to the system ls
+# ls stuff — use eza when available, fall back to macOS's ls
 if command -v eza > /dev/null 2>&1; then
     alias ls="eza"
     alias l="eza -lF --git"
     alias ll="eza -l --git"
     alias la="eza -laF --git"
     alias lsd="eza -lD"
-elif [[ "${OSTYPE}" == darwin* ]]; then
+else
     alias l="ls -lFG"
     alias ll="ls -lhG"
     alias la="ls -laFG"
     alias lsd="ls -lFG | grep --color=never '^d'"
     alias ls="command ls -G"
-else
-    alias l="ls -lF --color=auto"
-    alias ll="ls -lh --color=auto"
-    alias la="ls -laF --color=auto"
-    alias lsd="ls -lF --color=always | grep --color=never '^d'"
-    alias ls="command ls --color=auto"
 fi
 
-# bat: syntax-highlighted cat (plain `command cat` still works when needed); batcat on Debian/Ubuntu
+# bat: syntax-highlighted cat (plain `command cat` still works when needed)
 if command -v bat > /dev/null 2>&1; then
     alias cat="bat --paging=never"
-elif command -v batcat > /dev/null 2>&1; then
-    alias cat="batcat --paging=never"
-    alias bat="batcat"
 fi
 
 # always enable colored `grep` output
@@ -45,6 +36,4 @@ alias egrep='egrep --color=auto'
 alias sudo='sudo '
 
 # recursively delete `.DS_Store` files
-if [[ "${OSTYPE}" == darwin* ]]; then
-    alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
-fi
+alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"

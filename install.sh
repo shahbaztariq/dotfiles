@@ -18,7 +18,7 @@ done
 echo "Installing dotfiles"
 
 DOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-THEME='Lab Sunset Rally'
+THEME='Sunset Rally'
 HOST=omnibytes   # this branch is this Mac's only, so the banner folder is fixed (banner/hosts/omnibytes)
 
 # the first of <path>, <path>.2, <path>.3… that doesn't exist
@@ -71,10 +71,10 @@ fi
 [ -f ~/.secrets ] || echo "  no ~/.secrets: copy it over from another Mac (it isn't in this repo)"
 
 # --- the banner: in every new Ghostty tab (.bash_profile); its colours also shade the prompt (.bash_prompt) --------
-link "$DOTDIR/banner/lab-banner" ~/bin/lab-banner
+link "$DOTDIR/banner/tab-banner" ~/bin/tab-banner
 if [ -d "$DOTDIR/banner/hosts/$HOST" ]; then
     for f in banner.conf art.txt art-small.txt; do
-        [ -e "$DOTDIR/banner/hosts/$HOST/$f" ] && link "$DOTDIR/banner/hosts/$HOST/$f" ~/.config/lab-banner/"$f"
+        [ -e "$DOTDIR/banner/hosts/$HOST/$f" ] && link "$DOTDIR/banner/hosts/$HOST/$f" ~/.config/tab-banner/"$f"
     done
 else
     echo "  no banner/hosts/$HOST: the banner shows the plain host name and the prompt keeps the theme's colours"

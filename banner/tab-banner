@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+# tab-banner: omnibytes in big gradient letters and a live readout below it: chip, macOS, uptime and load, battery,
+# memory, the Data volume and network. Runs in every new Ghostty tab (bash_profile) and any time by hand; linked
+# from ~/.dotfiles/banner (see CLAUDE.md there).
+#
+# Settings and art are in ~/.config/tab-banner: banner.conf (the gradient, tagline and role) and the name
+# pre-rendered in the figlet fonts ANSI Shadow (art.txt) and small (art-small.txt). The big one is used when it fits
+# the terminal, then the small one, then the plain host name. Colours are 24-bit; NO_COLOR=1 turns them off.
+
+set -u
+export LC_ALL=C.UTF-8
+dir="$HOME/.config/tab-banner"
+# uptime in seconds -> "4d 21h 3m"
+since() { local u=$1 d h m; d=$((u / 86400)) h=$((u % 86400 / 3600)) m=$((u % 3600 / 60)); ((d)) && printf '%dd ' "$d"; printf '%dh %dm' "$h" "$m"; }
+[ -r "$dir/banner.conf" ] && . "$dir/banner.conf"
+: "${BANNER_FROM:=#7DD3FC}" "${BANNER_TO:=#A78BFA}" "${BANNER_TAGLINE:=}" "${BANNER_ROLE:=}"
+
+color=1; [ -n "${NO_COLOR:-}" ] && color=0
+# the terminal's width, from the terminal itself (tput, its output captured, says 80 on macOS whatever the width)
+cols=; read -r _ cols < <({ stty size </dev/tty; } 2>/dev/null); cols=${cols:-80}
+host=$(hostname -s)
+
+R1=$((16#${BANNER_FROM:1:2})) G1=$((16#${BANNER_FROM:3:2})) B1=$((16#${BANNER_FROM:5:2}))
+R2=$((16#${BANNER_TO:1:2})) G2=$((16#${BANNER_TO:3:2})) B2=$((16#${BANNER_TO:5:2}))
+
+# fg <0..1000> [percent brightness]: REPLY = the escape for the gradient's colour at that point
+fg() {
+    local t=$1 k=${2:-100}
+    ((color)) || { REPLY=; return; }
+    REPLY=$'\e[38;2;'"$(( (R1 + (R2 - R1) * t / 1000) * k / 100 ));$(( (G1 + (G2 - G1) * t / 1000) * k / 100 ));$(( (B1 + (B2 - B1) * t / 1000) * k / 100 ))m"
+}
+if ((color)); then
+    B=$'\e[1m' D=$'\e[2m' I=$'\e[3m' X=$'\e[0m' Y=$'\e[38;2;250;204;21m' RED=$'\e[38;2;248;113;113m'
+else
+    B='' D='' I='' X='' Y='' RED=''
+fi
+fg 0; C1=$REPLY; fg 1000; C2=$REPLY
+
+# --- the name -------------------------------------------------------------------------------------------------
+art=
+for f in "$dir/art.txt" "$dir/art-small.txt"; do
+    [ -r "$f" ] || continue
+    lines=(); while IFS= read -r l || [ -n "$l" ]; do lines+=("$l"); done <"$f"   # not mapfile, so bash 3.2 can run it too
+    w=0; for l in ${lines[@]+"${lines[@]}"}; do ((${#l} > w)) && w=${#l}; done
+    ((w + 4 <= cols)) && { art=$f; break; }
+done
+
+echo
+if [ -n "$art" ]; then
+    n=${#lines[@]} span=$((w + ${#lines[@]} * 4))
+    for ((y = 0; y < n; y++)); do
+        line=${lines[y]} out="  "
+        for ((x = 0; x < ${#line}; x++)); do
+            c=${line:x:1}
+            if [[ $c == " " ]]; then out+=" "; continue; fi
+            # a diagonal sweep; ANSI Shadow's box-drawing strokes are its shadow, so they get a darker shade
+            case $c in [╗╔╝╚║═]) fg $(((x + y * 4) * 1000 / span)) 45 ;; *) fg $(((x + y * 4) * 1000 / span)) ;; esac
+            out+="$REPLY$c"
+        done
+        printf '%s%s\n' "$out" "$X"
+    done
+else
+    w=${#host}
+    printf '  %s%s%s\n' "$B$C1" "$host" "$X"
+fi
+
+# a rule under the name in the same gradient, as wide as the art (at least 60), then the tagline
+rw=$((w > 60 ? w : 60)); ((rw + 4 > cols)) && rw=$((cols - 4))
+out="  "; for ((x = 0; x < rw; x++)); do fg $((x * 1000 / rw)); out+="${REPLY}━"; done
+printf '%s%s\n' "$out" "$X"
+[ -n "$BANNER_TAGLINE" ] && printf '  %s◆ %s%s%s\n' "$C2" "$I" "$BANNER_TAGLINE" "$X"
+echo
+
+# --- the readout ----------------------------------------------------------------------------------------------
+row() { printf '  %s%-7s%s %s\n' "$C1$B" "$1" "$X" "$2"; }
+sep="${D}·$X"
+
+# bar <percent> [low]: 20 cells, the filled part in the gradient. The figure turns yellow at 75 % and red at 90 %,
+# or with "low" (a battery), yellow under 40 % and red under 20 %.
+bar() {
+    local p=$1 i out='' on=$(( ($1 * 20 + 50) / 100 )) pc=$X
+    for ((i = 0; i < 20; i++)); do
+        if ((i < on)); then fg $((i * 50)); out+="${REPLY}▰"; else out+="${D}▱$X"; fi
+    done
+    if [ "${2:-}" = low ]; then ((p < 40)) && pc=$Y; ((p < 20)) && pc=$RED
+    else ((p >= 90)) && pc=$RED || { ((p >= 75)) && pc=$Y; }; fi
+    REPLY="$out$X $pc$(printf '%3d%%' "$p")$X"
+}
+gib() { awk -v k="$1" 'BEGIN { g = k / 1048576; printf (g >= 100 ? "%.0f" : "%.1f"), g }'; }
+
+chip=$(sysctl -n machdep.cpu.brand_string 2>/dev/null)
+row host "$B$host$X ${BANNER_ROLE:+$sep $BANNER_ROLE }${chip:+$sep $chip}"
+row os "$(sw_vers -productName) $(sw_vers -productVersion) $sep Darwin $(uname -r) $sep $(uname -m)"
+
+bt=$(sysctl -n kern.boottime | sed -E 's/^[{] sec = ([0-9]+),.*/\1/')   # "{ sec = 1790953757, usec = ... } ..."
+read -r _ l1 l5 l15 _ <<<"$(sysctl -n vm.loadavg)"
+row up "$(since $(($(date +%s) - bt))) $sep load $l1 $l5 $l15 $sep $(sysctl -n hw.ncpu) cpus"
+
+# battery: pmset's second line is "88%; <state>; <time> remaining present: true", where the state can be
+# charging, discharging, charged or "AC attached; not charging" (battery protection), and the time may be missing
+batt=$(pmset -g batt 2>/dev/null)
+if [[ $batt =~ ([0-9]+)%\;\ ([^$'\n']*) ]]; then
+    bp=${BASH_REMATCH[1]} bs=${BASH_REMATCH[2]%% present:*}
+    bs=${bs//; 0:00 remaining/}; bs=${bs//; (no estimate)/}; bs=${bs// remaining/ left}; bs=${bs//; / $sep }
+    bar "$bp" low
+    b="$REPLY  $bs"
+    [[ $batt == *"'AC Power'"* && $bs != *AC* ]] && b+=" $sep on power"
+    row battery "$b"
+fi
+
+# memory as Activity Monitor counts it: active, wired and compressed
+mt=$(($(sysctl -n hw.memsize) / 1024))
+mu=$(vm_stat | awk '/page size of/ { ps = $8 } /^Pages active:/ { a = $3 } /^Pages wired down:/ { w = $4 }
+                   /^Pages occupied by compressor:/ { c = $5 } END { printf "%d", (a + w + c) * ps / 1024 }')
+bar $((mu * 100 / mt))
+row mem "$REPLY  $(gib "$mu") / $(gib "$mt") GiB"
+
+dv=/System/Volumes/Data; [ -d "$dv" ] || dv=/
+read -r _ dsize dused _ < <(df -Pk "$dv" | tail -1)
+bar $((dused * 100 / dsize))
+row disk "$REPLY  $(gib "$dused") / $(gib "$dsize") GiB"
+
+nif=$(route -n get default 2>/dev/null | awk '/interface:/ { print $2 }')
+# with an exit node the default route is Tailscale's tunnel: the LAN address is on the first real interface
+if [[ -z $nif || $nif == utun* ]]; then
+    for i in $(ifconfig -l); do [[ $i == en* ]] && ipconfig getifaddr "$i" >/dev/null 2>&1 && { nif=$i; break; }; done
+fi
+lan=$( [ -n "$nif" ] && ipconfig getifaddr "$nif" 2>/dev/null)
+ts=$(ifconfig 2>/dev/null | awk '/inet 100\./ { print $2; exit }')
+row net "${lan:+lan $lan ${D}($nif)$X}${ts:+ $sep tailnet $ts}"
+echo

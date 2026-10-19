@@ -1,15 +1,10 @@
 # The bash setup for omnibytes, linked from ~/.dotfiles (see CLAUDE.md there): Homebrew's shell environment and
-# bash completion, the other dotfiles, history, fzf, bat, 1Password's shell plugins, OrbStack, fnm and the lab banner
-# in each new Ghostty tab. The Linux branches are leftovers from the lab repo this file came from; unused here.
+# bash completion, the other dotfiles, history, fzf, bat, 1Password's shell plugins, OrbStack, fnm and the banner
+# in each new Ghostty tab.
 
-if [[ "${OSTYPE}" == darwin* ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)";
-    [[ -r /opt/homebrew/etc/profile.d/bash_completion.sh ]] && . /opt/homebrew/etc/profile.d/bash_completion.sh;
-    case ":${PATH}:" in *":${HOME}/bin:"*) ;; *) export PATH="$HOME/bin:$PATH";; esac;   # once, even if sourced again
-else
-    [[ -r /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion;
-    export PATH="$HOME/bin:$HOME/.local/bin:$PATH";
-fi;
+eval "$(/opt/homebrew/bin/brew shellenv)";
+[[ -r /opt/homebrew/etc/profile.d/bash_completion.sh ]] && . /opt/homebrew/etc/profile.d/bash_completion.sh;
+case ":${PATH}:" in *":${HOME}/bin:"*) ;; *) export PATH="$HOME/bin:$PATH";; esac;   # once, even if sourced again
 
 # load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$path`.
@@ -47,17 +42,16 @@ shopt -s autocd globstar;
 # tolerate minor typos in `cd` paths and directory-name completion
 shopt -s cdspell dirspell;
 
-if [[ "${OSTYPE}" == darwin* ]]; then
-    # 1password shell plugins (created by `op plugin init <tool>`, e.g. gh)
-    [ -f ~/.config/op/plugins.sh ] && source ~/.config/op/plugins.sh;
-    # OrbStack: command-line tools and integration
-    source ~/.orbstack/shell/init.bash 2>/dev/null || :;
-    # the lab banner in every new Ghostty tab: a login shell, so not again for a bash started inside one;
-    # not in tmux, nor in other apps' terminals (Zed, VS Code)
-    if [[ $- == *i* && "${TERM_PROGRAM:-}" == ghostty && -z "${TMUX:-}" ]] && shopt -q login_shell \
-        && command -v lab-banner > /dev/null 2>&1; then
-        lab-banner;
-    fi;
+# 1password shell plugins (created by `op plugin init <tool>`, e.g. gh)
+[ -f ~/.config/op/plugins.sh ] && source ~/.config/op/plugins.sh;
+
+# OrbStack: command-line tools and integration
+source ~/.orbstack/shell/init.bash 2>/dev/null || :;
+
+# the banner in every new Ghostty tab: a login shell, so not again for a bash started inside one; not in other
+# apps' terminals (Zed, VS Code)
+if [[ $- == *i* && "${TERM_PROGRAM:-}" == ghostty ]] && shopt -q login_shell && command -v tab-banner > /dev/null 2>&1; then
+    tab-banner;
 fi;
 
 # fnm (Fast Node Manager)

@@ -13,9 +13,9 @@ opening pull requests.
 
 What a Mac gets once it's applied:
 
-1. **The Ghostty theme Lab Sunset Rally**: a plum background (`#1b1026`), warm text, a sunset-orange cursor
+1. **The Ghostty theme Sunset Rally**: a plum background (`#1b1026`), warm text, a sunset-orange cursor
    (`#ff8a3d`).
-2. **The lab banner** in every new Ghostty tab: the host name in big pink-to-violet letters, a tagline, and a live
+2. **the banner** in every new Ghostty tab: the host name in big pink-to-violet letters, a tagline, and a live
    readout (chip, macOS, uptime and load, battery, memory, disk, network).
 3. **The bash setup**: the prompt `user at host in dir on branch [+!?$]`, with `user at host` in the banner's
    gradient, `✘ <status>` after a failure and `took <time>` after a command of 5 s or more; a desktop notification
@@ -29,9 +29,9 @@ What a Mac gets once it's applied:
 |---|---|---|
 | `.bash_profile`, `.bashrc`, `.bash_prompt`, `.aliases`, `.functions`, `.exports`, `.inputrc` | `~/.<same>` | the bash setup |
 | `.gitconfig`, `.globalignore` | `~/.<same>` | git |
-| `ghostty/themes/Lab Sunset Rally` | `~/.config/ghostty/themes/Lab Sunset Rally` (under `$XDG_CONFIG_HOME` instead, if set) | the name, spaces included, is what `theme =` refers to |
-| `banner/lab-banner` | `~/bin/lab-banner` | runs in each new Ghostty tab (`.bash_profile`) |
-| `banner/hosts/omnibytes/{banner.conf,art.txt,art-small.txt}` | `~/.config/lab-banner/` | this Mac's banner; the folder name is hardcoded in `install.sh` |
+| `ghostty/themes/Sunset Rally` | `~/.config/ghostty/themes/Sunset Rally` (under `$XDG_CONFIG_HOME` instead, if set) | the name, spaces included, is what `theme =` refers to |
+| `banner/tab-banner` | `~/bin/tab-banner` | runs in each new Ghostty tab (`.bash_profile`) |
+| `banner/hosts/omnibytes/{banner.conf,art.txt,art-small.txt}` | `~/.config/tab-banner/` | this Mac's banner; the folder name is hardcoded in `install.sh` |
 | `Brewfile` | | packages the setup uses |
 | | `~/.hushlogin` | created if missing: silences macOS's "Last login" line, which the banner replaces |
 | `install.sh` | | does all of the above; safe to run again |
@@ -55,7 +55,7 @@ fzf (`--color=16`), bat (`BAT_THEME=ansi`), completion colours and the prompt fo
   (`.inputrc`).
 - **History** is flushed after every command, so it survives a crash and new tabs see other tabs' commands.
   `ls`, `ll`, `la`, `cd`, `pwd`, `clear` and `history` aren't kept, nor is a command typed with a leading space.
-- `LAB_NOTIFY_AFTER=<seconds>` changes when the desktop notification fires (default 30). Editors, pagers, `ssh`,
+- `PROMPT_NOTIFY_AFTER=<seconds>` changes when the desktop notification fires (default 30). Editors, pagers, `ssh`,
   `claude`, followed logs and the like never notify.
 
 ### Git (`.gitconfig`, `.globalignore`)
@@ -182,12 +182,12 @@ done
 # (there's no terminal here); anything else is a real error
 TERM_PROGRAM=ghostty "$lb" -l -i -c true 2>&1 >/dev/null
 # the setup and the user's settings are present (names only, never values); no TERM_PROGRAM, so no banner
-TERM_PROGRAM= "$lb" -l -i -c 'type -t mkd __lab_precmd; command -v lab-banner; echo "HISTSIZE=$HISTSIZE";
+TERM_PROGRAM= "$lb" -l -i -c 'type -t mkd __prompt_precmd; command -v tab-banner; echo "HISTSIZE=$HISTSIZE";
     for v in GITHUB_USERNAME ANTHROPIC_AUTH_TOKEN TRELLO_API_KEY; do [ -n "${!v}" ] && echo "$v: set" || echo "$v: MISSING"; done' 2>/dev/null
 /Applications/Ghostty.app/Contents/MacOS/ghostty +show-config | grep -E '^(theme|background|cursor-color) '
 ```
 
-Expected: `theme = Lab Sunset Rally`, `background = #1b1026`, `cursor-color = #ff8a3d` (unless the config sets
+Expected: `theme = Sunset Rally`, `background = #1b1026`, `cursor-color = #ff8a3d` (unless the config sets
 colours directly). Add the variables from step 3 to the loop. If a line in `~/.extra` errors, fix it or comment it
 out and tell the user; don't change the repo's files to suit one Mac.
 
@@ -205,7 +205,7 @@ and why, and anything left for the user to decide.
 
 ## Changing the banner
 
-Everything is in `banner/hosts/omnibytes/`, linked into `~/.config/lab-banner/`, so an edit shows in the next new
+Everything is in `banner/hosts/omnibytes/`, linked into `~/.config/tab-banner/`, so an edit shows in the next new
 tab (the prompt's colours, in the next new shell):
 
 - `banner.conf`: `BANNER_FROM` and `BANNER_TO` (`#rrggbb`, the gradient for the banner and the prompt's names),
@@ -213,15 +213,6 @@ tab (the prompt's colours, in the next new shell):
 - `art.txt` and `art-small.txt`: the name in the figlet fonts ANSI Shadow and small, lowercase `omnibytes` like
   the Mac's name (`scutil --get LocalHostName`). The big one is used when it fits the terminal (width + 4), then
   the small one, then the plain host name.
-
-## Where the files came from
-
-The theme, `banner/lab-banner` and the bash files (except `.exports`, `.gitconfig`, `.globalignore`, `Brewfile`)
-started as copies from the user's lab repo, which manages their servers. **They are this repo's own now: there is
-no sync with the lab repo in either direction**, so change them freely here.
-
-Leftovers from that origin, harmless on a Mac: Linux branches in `.bash_profile`, `.aliases` and `lab-banner`, the
-tmux helpers in `.functions` (active only where tmux is installed). They can be stripped whenever convenient.
 
 ## Gotchas
 
@@ -234,10 +225,32 @@ tmux helpers in `.functions` (active only where tmux is installed). They can be 
   Application Support config.
 - In these shells `cat` is `bat`. Use `command cat` when the exact bytes matter (`command cat -v`).
 
+### Testing `install.sh`
+
+After any change to it. In a throwaway home, never the real one, and always with `--no-brew`. Set both `HOME` and
+`XDG_CONFIG_HOME`, or the theme and config land in the real `~/.config`. Ghostty's validator still reads the real
+account's Application Support config, so its "accepts its config" line says nothing about the throwaway.
+
+```sh
+T=$(mktemp -d); mkdir -p "$T/.config/ghostty"
+# a config that is a symlink, with a light/dark theme line: edited through the link, the link kept, a backup made
+printf 'font-size = 14\ntheme = light:Foo,dark:Bar\n' > "$T/real.conf"; ln -s "$T/real.conf" "$T/.config/ghostty/config"
+# a file in the way identical to the repo's: replaced without a backup; a different one: kept as .pre-dotfiles
+cp ~/.dotfiles/.inputrc "$T/.inputrc"; echo old > "$T/.bashrc"
+HOME=$T XDG_CONFIG_HOME=$T/.config /bin/bash ~/.dotfiles/install.sh --no-brew   # /bin/bash: the 3.2 a fresh Mac has
+HOME=$T XDG_CONFIG_HOME=$T/.config /bin/bash ~/.dotfiles/install.sh --no-brew   # again: no linked/kept/set lines
+command cat "$T/real.conf"; ls -la "$T" "$T/.config/ghostty" "$T/.config/ghostty/themes"; rm -rf "$T"
+```
+
+Expected: `theme = Sunset Rally` in `real.conf` with `font-size` intact; `config` still a symlink, with
+`config.bak-dotfiles` beside it; `.bashrc.pre-dotfiles` present and no `.inputrc.pre-dotfiles`; the theme linked
+under `$T/.config/ghostty/themes/`; the second run printing only status lines. Also run it once for real
+(`./install.sh --no-brew`): on a set-up Mac it must change nothing.
+
 ## Undoing it
 
-Remove the links `install.sh` made (`find ~ -maxdepth 1 -lname "$HOME/.dotfiles/*"`, plus `~/bin/lab-banner`,
-`~/.config/lab-banner/*` and `~/.config/ghostty/themes/Lab Sunset Rally`). Move each `.pre-dotfiles` back
+Remove the links `install.sh` made (`find ~ -maxdepth 1 -lname "$HOME/.dotfiles/*"`, plus `~/bin/tab-banner`,
+`~/.config/tab-banner/*` and `~/.config/ghostty/themes/Sunset Rally`). Move each `.pre-dotfiles` back
 (`mv ~/.bashrc.pre-dotfiles ~/.bashrc`), restore the Ghostty config from its `.bak-dotfiles` (or delete the config
 if `install.sh` created it: its run printed `created … with theme`), remove what was added to `~/.extra`, and
 delete `~/.hushlogin` if it didn't exist before. Then reload Ghostty.
