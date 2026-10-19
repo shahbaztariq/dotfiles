@@ -19,7 +19,7 @@ echo "Installing dotfiles"
 
 DOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 THEME='Lab Sunset Rally'
-HOST="$(hostname -s)"
+HOST=omnibytes   # this branch is this Mac's only, so the banner folder is fixed (banner/hosts/omnibytes)
 
 # the first of <path>, <path>.2, <path>.3… that doesn't exist
 free_name() {
@@ -83,10 +83,10 @@ fi
 [ -e ~/.hushlogin ] || { touch ~/.hushlogin; echo "  created ~/.hushlogin"; }
 
 # --- Ghostty: the theme, and `theme = …` in the config file that wins --------------------------------------------
-link "$DOTDIR/ghostty/themes/$THEME" ~/.config/ghostty/themes/"$THEME"
+xdg="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty"   # where Ghostty looks for themes and its first config files
+link "$DOTDIR/ghostty/themes/$THEME" "$xdg/themes/$THEME"
 
 # Ghostty on macOS reads these in order, so a later one wins
-xdg="${XDG_CONFIG_HOME:-$HOME/.config}/ghostty"
 app="$HOME/Library/Application Support/com.mitchellh.ghostty"
 configs=()
 for f in "$xdg/config" "$xdg/config.ghostty" "$app/config" "$app/config.ghostty"; do
@@ -105,13 +105,14 @@ else
     target="$xdg/config"
 fi
 
-if [ -f "$target" ] && grep -qE "^[[:space:]]*theme[[:space:]]*=[[:space:]]*${THEME}[[:space:]]*\$" "$target"; then
+# the last theme line is the one Ghostty uses
+if [ -f "$target" ] && grep -E '^[[:space:]]*theme[[:space:]]*=' "$target" | tail -1 | grep -qE "=[[:space:]]*${THEME}[[:space:]]*\$"; then
     echo "  Ghostty already uses $THEME ($target)"
 elif [ -f "$target" ]; then
     kept=$(free_name "$target.bak-dotfiles")
     cp -p "$target" "$kept"
     if grep -qE '^[[:space:]]*theme[[:space:]]*=' "$target"; then
-        sed -i '' -E "s/^[[:space:]]*theme[[:space:]]*=.*/theme = $THEME/" "$target"
+        sed -E "s/^[[:space:]]*theme[[:space:]]*=.*/theme = $THEME/" "$kept" > "$target"   # through a symlink too
     else
         printf '\ntheme = %s\n' "$THEME" >> "$target"
     fi
@@ -155,7 +156,11 @@ else
     echo "Homebrew not found - install it, then run: brew bundle --file=$DOTDIR/Brewfile"
 fi
 
-echo "Done. Remaining manual steps (see CLAUDE.md, 'Setting up a fresh Mac'):"
-echo "  1. Add homebrew bash to /etc/shells and chsh to it"
-echo "  2. Sign in to 1Password and enable CLI integration (Settings > Developer)"
-echo "  3. Reload Ghostty's config (Cmd+Shift+,) and open a new tab"
+echo "Done. Still to do by hand (CLAUDE.md, 'Setting up this Mac from scratch', steps 4-6):"
+# the login shell, unless it's Homebrew's bash already (dscl's output is "UserShell: /path")
+shell=$(dscl . -read ~ UserShell 2>/dev/null | awk '{print $2}')
+[ "$shell" = /opt/homebrew/bin/bash ] \
+    || echo "  - login shell: Homebrew's bash (add /opt/homebrew/bin/bash to /etc/shells, then chsh to it; needs sudo)"
+echo "  - 1Password: sign in, Settings > Developer > CLI integration and SSH agent, then: op plugin init gh"
+[ -f ~/.secrets ] || echo "  - ~/.secrets: copy it over from a backup"
+echo "  - reload Ghostty's config (Cmd+Shift+,) and open a new tab"

@@ -1,12 +1,12 @@
 # The bash setup for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo
 # (role dotfiles). Where macOS and Linux differ: on macOS Homebrew (its shell environment and bash completion),
-# Ansible's path, 1Password's shell plugins, OrbStack and the lab banner in each new Ghostty tab; on Linux the system bash completion and ~/.local/bin, which
+# 1Password's shell plugins, OrbStack and the lab banner in each new Ghostty tab; on Linux the system bash completion and ~/.local/bin, which
 # the distro's own ~/.profile (kept there as ~/.profile.distro) used to provide.
 
 if [[ "${OSTYPE}" == darwin* ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)";
     [[ -r /opt/homebrew/etc/profile.d/bash_completion.sh ]] && . /opt/homebrew/etc/profile.d/bash_completion.sh;
-    export PATH="$HOME/bin:/opt/homebrew/opt/ansible@10/bin:$PATH";
+    case ":${PATH}:" in *":${HOME}/bin:"*) ;; *) export PATH="$HOME/bin:$PATH";; esac;   # once, even if sourced again
 else
     [[ -r /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion;
     export PATH="$HOME/bin:$HOME/.local/bin:$PATH";

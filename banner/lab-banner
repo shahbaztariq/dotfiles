@@ -75,7 +75,7 @@ art=
 for f in "$dir/art.txt" "$dir/art-small.txt"; do
     [ -r "$f" ] || continue
     lines=(); while IFS= read -r l || [ -n "$l" ]; do lines+=("$l"); done <"$f"   # not mapfile: macOS's bash 3.2 runs it too
-    w=0; for l in "${lines[@]}"; do ((${#l} > w)) && w=${#l}; done
+    w=0; for l in ${lines[@]+"${lines[@]}"}; do ((${#l} > w)) && w=${#l}; done
     ((w + 4 <= cols)) && { art=$f; break; }
 done
 

@@ -6,10 +6,10 @@ Macs: change files here, not the links in `~`.
 
 ## Branches
 
-**One branch per Mac, named after it (`hostname -s`), and each stands alone.** `omnibytes` is this work laptop's
-branch. Work on the Mac's own branch, commit and push there, and **never merge into `main`** or between the
-branches. A change wanted on another Mac is made on that Mac's branch too (cherry-pick it or redo it). A new Mac
-gets a new branch. Don't suggest merging or opening pull requests.
+**One branch per Mac, named after it (`hostname -s`), and each stands alone.** This branch, `omnibytes`, is this
+work laptop's and nothing else's: it isn't a template for other Macs, and this file describes this Mac only. Work
+on it, commit and push to it, and **never merge into `main`** or into another branch. Don't suggest merging or
+opening pull requests.
 
 What a Mac gets once it's applied:
 
@@ -29,10 +29,11 @@ What a Mac gets once it's applied:
 |---|---|---|
 | `.bash_profile`, `.bashrc`, `.bash_prompt`, `.aliases`, `.functions`, `.exports`, `.inputrc` | `~/.<same>` | the bash setup |
 | `.gitconfig`, `.globalignore` | `~/.<same>` | git |
-| `ghostty/themes/Lab Sunset Rally` | `~/.config/ghostty/themes/Lab Sunset Rally` | the name, spaces included, is what `theme =` refers to |
+| `ghostty/themes/Lab Sunset Rally` | `~/.config/ghostty/themes/Lab Sunset Rally` (under `$XDG_CONFIG_HOME` instead, if set) | the name, spaces included, is what `theme =` refers to |
 | `banner/lab-banner` | `~/bin/lab-banner` | runs in each new Ghostty tab (`.bash_profile`) |
-| `banner/hosts/<hostname -s>/{banner.conf,art.txt,art-small.txt}` | `~/.config/lab-banner/` | per Mac; only `omnibytes` so far |
+| `banner/hosts/omnibytes/{banner.conf,art.txt,art-small.txt}` | `~/.config/lab-banner/` | this Mac's banner; the folder name is hardcoded in `install.sh` |
 | `Brewfile` | | packages the setup uses |
+| | `~/.hushlogin` | created if missing: silences macOS's "Last login" line, which the banner replaces |
 | `install.sh` | | does all of the above; safe to run again |
 
 `.bash_profile` loads, in order: Homebrew's environment and bash completion, `~/bin` on PATH, then
@@ -79,14 +80,14 @@ fzf (`--color=16`), bat (`BAT_THEME=ansi`), completion colours and the prompt fo
   1Password shell plugin (Touch ID when used).
 - `.exports` is for non-secret variables only.
 
-## Setting up a fresh Mac
+## Setting up this Mac from scratch
 
-The user does the steps that need a password, `sudo` or a sign-in. An agent can do the rest.
+If omnibytes is ever wiped. The user does the steps that need a password, `sudo` or a sign-in. An agent can do
+the rest.
 
 1. **Homebrew** (user): `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-2. **Clone the Mac's branch**: `git clone -b "$(hostname -s)" git@github.com:shahbaztariq/dotfiles.git ~/.dotfiles`
-   (needs a GitHub SSH key, which 1Password's SSH agent provides once signed in. Otherwise clone over HTTPS). For a
-   Mac that has no branch yet, clone another Mac's branch and `git switch -c "$(hostname -s)"` (see Branches).
+2. **Clone this branch**: `git clone -b omnibytes git@github.com:shahbaztariq/dotfiles.git ~/.dotfiles` (needs a
+   GitHub SSH key, which 1Password's SSH agent provides once signed in. Otherwise clone over HTTPS).
 3. **Install**: `cd ~/.dotfiles && ./install.sh`. This also runs `brew bundle`, so ask first, and on `omnibytes` use
    `--no-brew`. See "Applying it to a Mac" below.
 4. **Login shell to Homebrew's bash 5** (user; `sudo`). macOS's bash 3.2 can't run this setup:
@@ -108,8 +109,9 @@ The user does the steps that need a password, `sudo` or a sign-in. An agent can 
 ### Rules
 
 - **Nothing the user has now may be lost.** `install.sh` moves a file in its way to `<file>.pre-dotfiles` (then
-  `.pre-dotfiles.2`…), and copies a Ghostty config to `<file>.bak-dotfiles` before editing it. Do the same for
-  anything you change by hand, such as `~/.extra`.
+  `.pre-dotfiles.2`…), and copies a Ghostty config to `<file>.bak-dotfiles` before editing it. The one exception:
+  a regular file identical to the repo's copy is replaced by the link without a backup, as nothing is lost. Do the
+  same for anything you change by hand, such as `~/.extra`.
 - **Never print secret values** (tokens, passwords, keys), from `~/.secrets` or anywhere else. Refer to them by
   variable name. To check one is set: `[ -n "${!v}" ] && echo "$v: set"`. Never copy `~/.secrets` into the repo.
 - No `sudo`. Don't touch Ghostty settings other than `theme`, zsh files or system settings.
@@ -127,7 +129,7 @@ ls /opt/homebrew/bin/brew                                                # .bash
 /Applications/Ghostty.app/Contents/MacOS/ghostty +show-config | grep '^command '   # if set, it must be a bash 5 too
 ```
 
-A login shell that isn't Homebrew's bash is fixed by the user (fresh-Mac step 4 needs `sudo`), not by you.
+A login shell that isn't Homebrew's bash is fixed by the user (from-scratch step 4 needs `sudo`), not by you.
 
 ### 1. Read what's there now
 
@@ -201,31 +203,26 @@ command of 30 s or more makes macOS ask whether Ghostty can send notifications.
 List: each link made, each `.pre-dotfiles` and `.bak-dotfiles` kept, what went into `~/.extra`, what was left out
 and why, and anything left for the user to decide.
 
-## Adding a Mac's banner
+## Changing the banner
 
-Create `banner/hosts/<hostname -s>/` with:
+Everything is in `banner/hosts/omnibytes/`, linked into `~/.config/lab-banner/`, so an edit shows in the next new
+tab (the prompt's colours, in the next new shell):
 
 - `banner.conf`: `BANNER_FROM` and `BANNER_TO` (`#rrggbb`, the gradient for the banner and the prompt's names),
   `BANNER_TAGLINE` and `BANNER_ROLE`.
-- `art.txt` and `art-small.txt`: the host name in the figlet fonts ANSI Shadow and small. The big one is used
-  when it fits the terminal (width + 4), then the small one, then the plain name.
-
-Copy `banner/hosts/omnibytes/` as a starting point. Without a folder, the banner shows the plain host name in its
-default colours, and the prompt keeps the theme's colours. Then run `./install.sh --no-brew`.
+- `art.txt` and `art-small.txt`: the name in the figlet fonts ANSI Shadow and small, lowercase `omnibytes` like
+  the Mac's name (`scutil --get LocalHostName`). The big one is used when it fits the terminal (width + 4), then
+  the small one, then the plain host name.
 
 ## Where the files came from
 
 The theme, `banner/lab-banner` and the bash files (except `.exports`, `.gitconfig`, `.globalignore`, `Brewfile`)
-are copies from the user's lab repo (`roles/mac/files/ghostty/themes/`, `roles/banner/files/`,
-`roles/dotfiles/files/`). That repo manages the servers, not these Macs, which is why their header comments say
-"Managed by the lab repo". Those comments are kept as they are so the files can be diffed against the lab repo to
-pick up its later changes. The deliberate differences from the lab's copies, which must survive such an update, are:
+started as copies from the user's lab repo, which manages their servers. **They are this repo's own now: there is
+no sync with the lab repo in either direction**, so change them freely here. Their header comments still say
+"Managed by the lab repo"; that's history, not a rule.
 
-- `.bash_profile`: `secrets` in the list of files it sources; fnm at the end.
-- `Brewfile` (this repo only): `fnm`.
-
-Not in this repo: Linux behaviour (the files have Linux branches for the lab's servers, unused here) and the tmux
-helpers in `.functions` (only active where tmux is installed).
+Leftovers from that origin, harmless on a Mac: Linux branches in `.bash_profile`, `.aliases` and `lab-banner`, the
+tmux helpers in `.functions` (active only where tmux is installed). They can be stripped whenever convenient.
 
 ## Gotchas
 
@@ -242,5 +239,6 @@ helpers in `.functions` (only active where tmux is installed).
 
 Remove the links `install.sh` made (`find ~ -maxdepth 1 -lname "$HOME/.dotfiles/*"`, plus `~/bin/lab-banner`,
 `~/.config/lab-banner/*` and `~/.config/ghostty/themes/Lab Sunset Rally`). Move each `.pre-dotfiles` back
-(`mv ~/.bashrc.pre-dotfiles ~/.bashrc`), restore the Ghostty config from its `.bak-dotfiles`, remove what was
-added to `~/.extra`, and delete `~/.hushlogin` if it didn't exist before. Then reload Ghostty.
+(`mv ~/.bashrc.pre-dotfiles ~/.bashrc`), restore the Ghostty config from its `.bak-dotfiles` (or delete the config
+if `install.sh` created it: its run printed `created … with theme`), remove what was added to `~/.extra`, and
+delete `~/.hushlogin` if it didn't exist before. Then reload Ghostty.
