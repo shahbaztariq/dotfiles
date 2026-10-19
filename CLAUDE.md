@@ -31,7 +31,7 @@ What a Mac gets once it's applied:
 | `.gitconfig`, `.globalignore` | `~/.<same>` | git |
 | `ghostty/themes/Sunset Rally` | `~/.config/ghostty/themes/Sunset Rally` (under `$XDG_CONFIG_HOME` instead, if set) | the name, spaces included, is what `theme =` refers to |
 | `banner/omnibytes-banner` | `~/bin/omnibytes-banner` | runs in each new Ghostty tab (`.bash_profile`) |
-| `banner/hosts/omnibytes/{banner.conf,art.txt,art-small.txt}` | `~/.config/omnibytes-banner/` | this Mac's banner; the folder name is hardcoded in `install.sh` |
+| `banner/{banner.conf,art.txt,art-small.txt}` | `~/.config/omnibytes-banner/` | the banner's gradient, tagline, role and art |
 | `Brewfile` | | packages the setup uses |
 | | `~/.hushlogin` | created if missing: silences macOS's "Last login" line, which the banner replaces |
 | `install.sh` | | does all of the above; safe to run again |
@@ -205,7 +205,7 @@ and why, and anything left for the user to decide.
 
 ## Changing the banner
 
-Everything is in `banner/hosts/omnibytes/`, linked into `~/.config/omnibytes-banner/`, so an edit shows in the next new
+Everything is in `banner/`, linked into `~/.config/omnibytes-banner/`, so an edit shows in the next new
 tab (the prompt's colours, in the next new shell):
 
 - `banner.conf`: `BANNER_FROM` and `BANNER_TO` (`#rrggbb`, the gradient for the banner and the prompt's names),
