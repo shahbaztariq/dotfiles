@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# tab-banner: omnibytes in big gradient letters and a live readout below it: chip, macOS, uptime and load, battery,
+# omnibytes-banner: omnibytes in big gradient letters and a live readout below it: chip, macOS, uptime and load, battery,
 # memory, the Data volume and network. Runs in every new Ghostty tab (bash_profile) and any time by hand; linked
 # from ~/.dotfiles/banner (see CLAUDE.md there).
 #
-# Settings and art are in ~/.config/tab-banner: banner.conf (the gradient, tagline and role) and the name
+# Settings and art are in ~/.config/omnibytes-banner: banner.conf (the gradient, tagline and role) and the name
 # pre-rendered in the figlet fonts ANSI Shadow (art.txt) and small (art-small.txt). The big one is used when it fits
 # the terminal, then the small one, then the plain host name. Colours are 24-bit; NO_COLOR=1 turns them off.
 
 set -u
 export LC_ALL=C.UTF-8
-dir="$HOME/.config/tab-banner"
+dir="$HOME/.config/omnibytes-banner"
 # uptime in seconds -> "4d 21h 3m"
 since() { local u=$1 d h m; d=$((u / 86400)) h=$((u % 86400 / 3600)) m=$((u % 3600 / 60)); ((d)) && printf '%dd ' "$d"; printf '%dh %dm' "$h" "$m"; }
 [ -r "$dir/banner.conf" ] && . "$dir/banner.conf"

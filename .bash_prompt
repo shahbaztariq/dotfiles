@@ -1,5 +1,5 @@
 # The prompt for omnibytes, linked from ~/.dotfiles. `user at host in dir on branch [+!?$]` in the terminal theme's
-# colours, with `user at host` in the banner's gradient (prompt_names, from ~/.config/tab-banner/banner.conf); the
+# colours, with `user at host` in the banner's gradient (prompt_names, from ~/.config/omnibytes-banner/banner.conf); the
 # last command's failure and duration, and a notification for long ones (__prompt_precmd).
 prompt_git() {
     # outside a repository: one git call and nothing shown
@@ -45,11 +45,11 @@ hostStyle="${yellow}";
 userPart="\[${userStyle}\]\u";
 hostPart="\[${hostStyle}\]\h";
 
-# `user at host` shaded letter by letter in the banner's gradient, from ~/.config/tab-banner/banner.conf, so the
+# `user at host` shaded letter by letter in the banner's gradient, from ~/.config/omnibytes-banner/banner.conf, so the
 # prompt matches the banner (root stays red: only the host is swept). These are fixed 24-bit colours, not theme
 # slots, picked for a dark theme. Without the file the names keep the theme's colours above.
 prompt_names() {
-    local conf="${HOME}/.config/tab-banner/banner.conf" esc=$'\e' u="${USER}" h="${HOSTNAME%%.*}" from to i t n k text out;
+    local conf="${HOME}/.config/omnibytes-banner/banner.conf" esc=$'\e' u="${USER}" h="${HOSTNAME%%.*}" from to i t n k text out;
     [[ -r "${conf}" ]] || return 0;
     read -r from to < <(. "${conf}"; echo "${BANNER_FROM} ${BANNER_TO}");
     [[ "${from}" =~ ^#[0-9A-Fa-f]{6}$ && "${to}" =~ ^#[0-9A-Fa-f]{6}$ ]] || return 0;

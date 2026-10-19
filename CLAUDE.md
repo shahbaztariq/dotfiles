@@ -30,8 +30,8 @@ What a Mac gets once it's applied:
 | `.bash_profile`, `.bashrc`, `.bash_prompt`, `.aliases`, `.functions`, `.exports`, `.inputrc` | `~/.<same>` | the bash setup |
 | `.gitconfig`, `.globalignore` | `~/.<same>` | git |
 | `ghostty/themes/Sunset Rally` | `~/.config/ghostty/themes/Sunset Rally` (under `$XDG_CONFIG_HOME` instead, if set) | the name, spaces included, is what `theme =` refers to |
-| `banner/tab-banner` | `~/bin/tab-banner` | runs in each new Ghostty tab (`.bash_profile`) |
-| `banner/hosts/omnibytes/{banner.conf,art.txt,art-small.txt}` | `~/.config/tab-banner/` | this Mac's banner; the folder name is hardcoded in `install.sh` |
+| `banner/omnibytes-banner` | `~/bin/omnibytes-banner` | runs in each new Ghostty tab (`.bash_profile`) |
+| `banner/hosts/omnibytes/{banner.conf,art.txt,art-small.txt}` | `~/.config/omnibytes-banner/` | this Mac's banner; the folder name is hardcoded in `install.sh` |
 | `Brewfile` | | packages the setup uses |
 | | `~/.hushlogin` | created if missing: silences macOS's "Last login" line, which the banner replaces |
 | `install.sh` | | does all of the above; safe to run again |
@@ -182,7 +182,7 @@ done
 # (there's no terminal here); anything else is a real error
 TERM_PROGRAM=ghostty "$lb" -l -i -c true 2>&1 >/dev/null
 # the setup and the user's settings are present (names only, never values); no TERM_PROGRAM, so no banner
-TERM_PROGRAM= "$lb" -l -i -c 'type -t mkd __prompt_precmd; command -v tab-banner; echo "HISTSIZE=$HISTSIZE";
+TERM_PROGRAM= "$lb" -l -i -c 'type -t mkd __prompt_precmd; command -v omnibytes-banner; echo "HISTSIZE=$HISTSIZE";
     for v in GITHUB_USERNAME ANTHROPIC_AUTH_TOKEN TRELLO_API_KEY; do [ -n "${!v}" ] && echo "$v: set" || echo "$v: MISSING"; done' 2>/dev/null
 /Applications/Ghostty.app/Contents/MacOS/ghostty +show-config | grep -E '^(theme|background|cursor-color) '
 ```
@@ -205,7 +205,7 @@ and why, and anything left for the user to decide.
 
 ## Changing the banner
 
-Everything is in `banner/hosts/omnibytes/`, linked into `~/.config/tab-banner/`, so an edit shows in the next new
+Everything is in `banner/hosts/omnibytes/`, linked into `~/.config/omnibytes-banner/`, so an edit shows in the next new
 tab (the prompt's colours, in the next new shell):
 
 - `banner.conf`: `BANNER_FROM` and `BANNER_TO` (`#rrggbb`, the gradient for the banner and the prompt's names),
@@ -249,8 +249,8 @@ under `$T/.config/ghostty/themes/`; the second run printing only status lines. A
 
 ## Undoing it
 
-Remove the links `install.sh` made (`find ~ -maxdepth 1 -lname "$HOME/.dotfiles/*"`, plus `~/bin/tab-banner`,
-`~/.config/tab-banner/*` and `~/.config/ghostty/themes/Sunset Rally`). Move each `.pre-dotfiles` back
+Remove the links `install.sh` made (`find ~ -maxdepth 1 -lname "$HOME/.dotfiles/*"`, plus `~/bin/omnibytes-banner`,
+`~/.config/omnibytes-banner/*` and `~/.config/ghostty/themes/Sunset Rally`). Move each `.pre-dotfiles` back
 (`mv ~/.bashrc.pre-dotfiles ~/.bashrc`), restore the Ghostty config from its `.bak-dotfiles` (or delete the config
 if `install.sh` created it: its run printed `created … with theme`), remove what was added to `~/.extra`, and
 delete `~/.hushlogin` if it didn't exist before. Then reload Ghostty.

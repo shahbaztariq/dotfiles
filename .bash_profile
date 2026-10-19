@@ -50,8 +50,8 @@ source ~/.orbstack/shell/init.bash 2>/dev/null || :;
 
 # the banner in every new Ghostty tab: a login shell, so not again for a bash started inside one; not in other
 # apps' terminals (Zed, VS Code)
-if [[ $- == *i* && "${TERM_PROGRAM:-}" == ghostty ]] && shopt -q login_shell && command -v tab-banner > /dev/null 2>&1; then
-    tab-banner;
+if [[ $- == *i* && "${TERM_PROGRAM:-}" == ghostty ]] && shopt -q login_shell && command -v omnibytes-banner > /dev/null 2>&1; then
+    omnibytes-banner;
 fi;
 
 # fnm (Fast Node Manager)
