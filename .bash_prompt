@@ -56,7 +56,7 @@ fi;
 
 # the hostname shaded letter by letter in the host's gradient: over ssh on a server, from its banner (
 # /etc/lab-banner/banner.conf), so the prompt matches the login banner; on a mac, from ~/.config/lab-banner/
-# banner.conf), where the username joins in: one sweep across `user at host` (root stays red), as the
+# banner.conf, where the username joins in: one sweep across `user at host` (root stays red), as the
 # mac's theme colour for the username wouldn't match. these are fixed 24-bit colours, not theme slots, picked for a
 # dark theme. without either the names keep their theme colours (host bold red over ssh, yellow locally).
 userPart="\[${userStyle}\]\u";
