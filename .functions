@@ -1,5 +1,5 @@
-# Shell functions for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo
-# (role dotfiles).
+# Shell functions for omnibytes, linked from ~/.dotfiles. The tmux helpers only load where tmux is installed: a
+# leftover from the lab repo this file came from, as tmux isn't on this Mac.
 # create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$_";

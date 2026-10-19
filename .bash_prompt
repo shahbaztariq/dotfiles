@@ -1,6 +1,7 @@
-# The prompt for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo (role
-# dotfiles). `user at host in dir on branch [+!?$]` in the terminal theme's colours; over SSH the host in its banner
-# gradient (prompt_host; on the macs, always); the last command's failure and duration, and a notification for long ones (__lab_precmd).
+# The prompt for omnibytes, linked from ~/.dotfiles. `user at host in dir on branch [+!?$]` in the terminal theme's
+# colours, with `user at host` in the banner's gradient (prompt_names, from ~/.config/lab-banner/banner.conf); the
+# last command's failure and duration, and a notification for long ones (__lab_precmd). The SSH and server paths are
+# leftovers from the lab repo this file came from.
 prompt_git() {
     # outside a repository: one git call and nothing shown
     local where; where=$(git rev-parse --is-inside-work-tree 2>/dev/null) || return;
@@ -53,9 +54,9 @@ else
     hostStyle="${yellow}";
 fi;
 
-# the hostname shaded letter by letter in the host's gradient: over ssh on a server, from its banner (role banner,
+# the hostname shaded letter by letter in the host's gradient: over ssh on a server, from its banner (
 # /etc/lab-banner/banner.conf), so the prompt matches the login banner; on a mac, from ~/.config/lab-banner/
-# banner.conf (role mac), where the username joins in: one sweep across `user at host` (root stays red), as the
+# banner.conf), where the username joins in: one sweep across `user at host` (root stays red), as the
 # mac's theme colour for the username wouldn't match. these are fixed 24-bit colours, not theme slots, picked for a
 # dark theme. without either the names keep their theme colours (host bold red over ssh, yellow locally).
 userPart="\[${userStyle}\]\u";

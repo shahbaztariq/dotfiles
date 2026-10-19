@@ -1,6 +1,5 @@
-# Shell aliases for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo
-# (role dotfiles). Where macOS and Linux differ: the ls fallback's flags (BSD vs GNU), bat's name (batcat on
-# Debian/Ubuntu), and the .DS_Store cleanup (macOS only).
+# Shell aliases for omnibytes, linked from ~/.dotfiles: navigation, eza and bat when installed (with fallbacks),
+# coloured grep. The Linux branches (GNU ls flags, batcat) are leftovers from the lab repo this file came from.
 
 # easier navigation
 alias ..="cd .."

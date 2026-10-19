@@ -1,7 +1,6 @@
-# The bash setup for every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo
-# (role dotfiles). Where macOS and Linux differ: on macOS Homebrew (its shell environment and bash completion),
-# 1Password's shell plugins, OrbStack and the lab banner in each new Ghostty tab; on Linux the system bash completion and ~/.local/bin, which
-# the distro's own ~/.profile (kept there as ~/.profile.distro) used to provide.
+# The bash setup for omnibytes, linked from ~/.dotfiles (see CLAUDE.md there): Homebrew's shell environment and
+# bash completion, the other dotfiles, history, fzf, bat, 1Password's shell plugins, OrbStack, fnm and the lab banner
+# in each new Ghostty tab. The Linux branches are leftovers from the lab repo this file came from; unused here.
 
 if [[ "${OSTYPE}" == darwin* ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)";
@@ -53,7 +52,7 @@ if [[ "${OSTYPE}" == darwin* ]]; then
     [ -f ~/.config/op/plugins.sh ] && source ~/.config/op/plugins.sh;
     # OrbStack: command-line tools and integration
     source ~/.orbstack/shell/init.bash 2>/dev/null || :;
-    # the lab banner in every new Ghostty tab (role mac): a login shell, so not again for a bash started inside one;
+    # the lab banner in every new Ghostty tab: a login shell, so not again for a bash started inside one;
     # not in tmux, nor in other apps' terminals (Zed, VS Code)
     if [[ $- == *i* && "${TERM_PROGRAM:-}" == ghostty && -z "${TMUX:-}" ]] && shopt -q login_shell \
         && command -v lab-banner > /dev/null 2>&1; then

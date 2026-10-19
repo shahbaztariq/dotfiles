@@ -1,2 +1,2 @@
-# Every machine: the Macs link to this file, the servers get a copy. Managed by the lab repo (role dotfiles).
+# A non-login bash on omnibytes gets the same setup: everything is in ~/.bash_profile. Linked from ~/.dotfiles.
 [ -n "$PS1" ] && source ~/.bash_profile;

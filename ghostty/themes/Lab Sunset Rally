@@ -1,7 +1,7 @@
 # Lab Sunset Rally: a synthwave rally sunset (from an image the user chose, 2026-10-15). A plum night sky behind
 # everything; dusk-violet folders, hot-pink branch, sun-yellow warnings, dust-red errors, lake-glow links, mint for
-# success, a sunset-orange cursor. The Macs' theme; each server keeps its own GitHub Dark shade (role banner), so
-# local and remote look unmistakably different. Managed by the lab repo (role mac).
+# success, a sunset-orange cursor. omnibytes's Ghostty theme, linked from ~/.dotfiles/ghostty/themes; the servers
+# keep their own GitHub Dark shade, so local and remote look unmistakably different.
 palette = 0=#2a1b3d
 palette = 1=#ff5a5f
 palette = 2=#6ee7b7

@@ -218,8 +218,7 @@ tab (the prompt's colours, in the next new shell):
 
 The theme, `banner/lab-banner` and the bash files (except `.exports`, `.gitconfig`, `.globalignore`, `Brewfile`)
 started as copies from the user's lab repo, which manages their servers. **They are this repo's own now: there is
-no sync with the lab repo in either direction**, so change them freely here. Their header comments still say
-"Managed by the lab repo"; that's history, not a rule.
+no sync with the lab repo in either direction**, so change them freely here.
 
 Leftovers from that origin, harmless on a Mac: Linux branches in `.bash_profile`, `.aliases` and `lab-banner`, the
 tmux helpers in `.functions` (active only where tmux is installed). They can be stripped whenever convenient.

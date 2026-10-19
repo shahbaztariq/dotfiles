@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# lab-banner: the host's name in big gradient letters and a live readout below it. Shown at SSH login by
-# /etc/profile.d/zz-lab-banner.sh on the servers, in every new Ghostty tab on the Macs (bash_profile), and any time
-# by running lab-banner. Managed by the lab repo (role banner; on the Macs, role mac links it in).
+# lab-banner: the host's name in big gradient letters and a live readout below it. On omnibytes it runs in every
+# new Ghostty tab (bash_profile) and any time by hand; linked from ~/.dotfiles/banner (see CLAUDE.md there). It came
+# from the lab repo, where it runs at SSH login on the servers: the server-only parts below (--login, the tab theme,
+# updates, last login, docker, zfs and VM rows) are leftovers, unused on a Mac.
 #
 # On a Mac the settings and art are in ~/.config/lab-banner, and the readout is the Mac's: chip, macOS, uptime and
 # load, battery, memory, the Data volume and network (no containers or updates there, by choice).
